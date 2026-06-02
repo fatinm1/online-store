@@ -42,6 +42,20 @@ canonical price from the database and computes the total itself.
   A forged or missing signature returns 400 and leaves the order untouched.
 - The webhook handler is idempotent: if an event is re-delivered, it checks
   the current order status and skips re-processing if already paid.
+- Stock decrements use `SELECT ... FOR UPDATE` (via SQLAlchemy's
+  `with_for_update()`) so that two concurrent `payment_intent.succeeded`
+  webhooks for the same product serialize at the database row level, preventing
+  overselling. This is a no-op on SQLite (used in development and tests) and
+  takes full effect on Postgres in production.
+
+## Cart localStorage
+
+The shopping cart is persisted to `localStorage` for user convenience. On page
+load, stored items are re-validated against the live catalog before display:
+items that are no longer active, out of stock, or missing from the catalog are
+removed, and names and prices are refreshed from the server. The `localStorage`
+values are **never** trusted for pricing at checkout — the server always
+recomputes the total from the database.
 
 ## Image Upload
 
