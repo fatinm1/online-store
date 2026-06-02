@@ -4,23 +4,23 @@ const CATEGORIES = [
   {
     id: 'abayas',
     href: '#abayas',
-    label: 'The Abaya Edit',
+    label: 'Abaya Collection',
     sub: 'Explore Collection',
-    img: 'https://images.pexels.com/photos/7148620/pexels-photo-7148620.jpeg?w=600&h=800&fit=crop',
+    img: 'https://images.pexels.com/photos/13838842/pexels-photo-13838842.jpeg?w=600&h=800&fit=crop',
   },
   {
     id: 'thobes',
     href: '#thobes',
-    label: 'The Thobe Edit',
+    label: 'Thobe Collection',
     sub: 'Heritage Tailoring',
-    img: 'https://images.pexels.com/photos/1536619/pexels-photo-1536619.jpeg?w=600&h=800&fit=crop',
+    img: 'https://images.pexels.com/photos/8164508/pexels-photo-8164508.jpeg?w=600&h=800&fit=crop',
   },
   {
     id: 'accessories',
     href: '#accessories',
-    label: 'Finishing Touches',
+    label: 'Other Collections',
     sub: 'Curated Details',
-    img: 'https://images.pexels.com/photos/965981/pexels-photo-965981.jpeg?w=600&h=800&fit=crop',
+    img: 'https://images.pexels.com/photos/34365839/pexels-photo-34365839.jpeg?w=600&h=800&fit=crop',
   },
 ]
 

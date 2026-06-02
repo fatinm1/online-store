@@ -34,9 +34,9 @@ function Storefront() {
       <main className="flex-grow pb-8">
         <Hero />
         <CategoryCards />
-        <ProductGrid id="abayas"      category="abaya"     title="The Abaya Edit" />
-        <ProductGrid id="thobes"      category="thobe"     title="The Thobe Edit" />
-        <ProductGrid id="accessories" category="accessory" title="Finishing Touches" />
+        <ProductGrid id="abayas"      category="abaya"     title="Abaya Collection" />
+        <ProductGrid id="thobes"      category="thobe"     title="Thobe Collection" />
+        <ProductGrid id="accessories" category="accessory" title="Other Collections" />
         <BrandBand />
       </main>
 

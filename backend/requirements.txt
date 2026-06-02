@@ -10,7 +10,8 @@ pillow==10.4.0
 python-dotenv==1.0.1
 sqlalchemy==2.0.31
 werkzeug==3.0.3
-psycopg2-binary>=2.9  # Postgres driver for production (DATABASE_URL); omit if Postgres unavailable
+psycopg2-binary>=2.9
+gunicorn>=22.0
 
 # testing
 pytest==8.2.2
