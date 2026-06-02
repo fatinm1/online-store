@@ -22,12 +22,12 @@ export default function ProductGrid({ category, title, id }) {
 
   return (
     <section id={id} className="w-full max-w-[1446px] mx-auto px-4 lg:px-0 mt-8">
-      <div className="bg-parchment rounded-xl p-8 lg:p-16 space-y-12 border border-clay/5 shadow-inner">
+      <div className="bg-parchment rounded-xl p-5 lg:p-8 xl:p-16 space-y-6 xl:space-y-12 border border-clay/5 shadow-inner">
         {/* Section heading */}
         <div className="flex flex-col md:flex-row justify-between items-baseline gap-4">
           <h2
             ref={headingRef}
-            className={`text-5xl lg:text-7xl tracking-tighter-extra font-display reveal-hidden ${headingVisible ? 'reveal-visible' : ''}`}
+            className={`text-3xl lg:text-4xl xl:text-5xl 2xl:text-7xl tracking-tighter-extra font-display reveal-hidden ${headingVisible ? 'reveal-visible' : ''}`}
           >
             {title}
           </h2>
@@ -36,7 +36,7 @@ export default function ProductGrid({ category, title, id }) {
         {/* Product deck */}
         <div
           ref={gridRef}
-          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8"
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 xl:gap-8"
         >
           {loading && Array.from({ length: 4 }).map((_, k) => (
             <div key={k} className="aspect-[3/4] rounded-xl bg-sand animate-pulse" />

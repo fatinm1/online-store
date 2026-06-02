@@ -81,10 +81,10 @@ export default function ProductCard({ product, deckVisible, deckIndex }) {
       {/* Card info */}
       <div className={`flex justify-between items-start ${!isAvailable ? 'opacity-60' : ''}`}>
         <div className="group-hover:translate-x-1 transition-transform duration-300">
-          <h4 className="text-xl tracking-tight font-display text-espresso">{product.name}</h4>
-          <p className="text-espresso/60 text-sm font-body capitalize">{product.category}</p>
+          <h4 className="text-base xl:text-lg tracking-tight font-display text-espresso">{product.name}</h4>
+          <p className="text-espresso/60 text-xs xl:text-sm font-body capitalize">{product.category}</p>
         </div>
-        <span className="text-lg font-bold group-hover:text-black transition-colors font-body">
+        <span className="text-sm xl:text-base font-bold group-hover:text-black transition-colors font-body">
           {formatPrice(product.price_cents)}
         </span>
       </div>

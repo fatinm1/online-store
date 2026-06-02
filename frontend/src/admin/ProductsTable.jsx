@@ -43,7 +43,7 @@ export default function ProductsTable() {
         <button onClick={() => setEditing(null)} className="font-body text-sm text-clay hover:text-espresso mb-6">
           Back to Products
         </button>
-        <h1 className="font-display text-3xl text-espresso mb-8">
+        <h1 className="font-display text-xl text-espresso mb-5">
           {editing === 'new' ? 'Add Product' : 'Edit Product'}
         </h1>
         <ProductForm
@@ -57,8 +57,8 @@ export default function ProductsTable() {
 
   return (
     <div>
-      <div className="flex justify-between items-center mb-8">
-        <h1 className="font-display text-3xl text-espresso">Products</h1>
+      <div className="flex justify-between items-center mb-5">
+        <h1 className="font-display text-xl text-espresso">Products</h1>
         <button onClick={() => setEditing('new')} className="bg-espresso hover:bg-clay text-cream px-5 py-2 rounded-xl font-body text-sm transition-colors">
           Add Product
         </button>
@@ -69,6 +69,7 @@ export default function ProductsTable() {
         <p className="font-body text-clay/60 text-sm">Loading...</p>
       ) : (
         <div className="bg-parchment rounded-2xl overflow-hidden">
+          <div className="overflow-x-auto">
           <table className="w-full">
             <thead>
               <tr className="border-b border-sand">
@@ -101,6 +102,7 @@ export default function ProductsTable() {
             </tbody>
           </table>
           {products.length === 0 && <p className="text-center font-body text-sm text-clay/60 py-8">No products yet.</p>}
+          </div>
         </div>
       )}
     </div>

@@ -50,7 +50,7 @@ export default function OrdersTable() {
         <button onClick={() => setSelected(null)} className="font-body text-sm text-clay hover:text-espresso mb-6">
           Back to Orders
         </button>
-        <h1 className="font-display text-3xl text-espresso mb-6">Order Detail</h1>
+        <h1 className="font-display text-xl text-espresso mb-5">Order Detail</h1>
         <div className="bg-parchment rounded-2xl p-6 max-w-xl space-y-4">
           <div className="flex justify-between">
             <span className="font-body text-sm text-clay">Order ID</span>
@@ -90,8 +90,8 @@ export default function OrdersTable() {
 
   return (
     <div>
-      <div className="flex justify-between items-center mb-8">
-        <h1 className="font-display text-3xl text-espresso">Orders</h1>
+      <div className="flex justify-between items-center mb-5">
+        <h1 className="font-display text-xl text-espresso">Orders</h1>
         <select
           value={statusFilter}
           onChange={(e) => { setStatusFilter(e.target.value); setPage(1) }}
@@ -107,6 +107,7 @@ export default function OrdersTable() {
         <p className="font-body text-clay/60 text-sm">Loading...</p>
       ) : (
         <div className="bg-parchment rounded-2xl overflow-hidden">
+          <div className="overflow-x-auto">
           <table className="w-full">
             <thead>
               <tr className="border-b border-sand">
@@ -138,6 +139,7 @@ export default function OrdersTable() {
             </tbody>
           </table>
           {orders.length === 0 && <p className="text-center font-body text-sm text-clay/60 py-8">No orders found.</p>}
+          </div>
         </div>
       )}
       <div className="flex justify-between items-center mt-4 font-body text-sm text-clay">

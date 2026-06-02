@@ -7,9 +7,9 @@ function formatPrice(cents) {
 
 function StatCard({ label, value }) {
   return (
-    <div className="bg-parchment rounded-2xl p-6">
-      <p className="font-body text-sm text-clay/60 mb-1">{label}</p>
-      <p className="font-display text-2xl text-espresso">{value}</p>
+    <div className="bg-parchment rounded-2xl p-4">
+      <p className="font-body text-xs text-clay/60 mb-1">{label}</p>
+      <p className="font-display text-lg text-espresso">{value}</p>
     </div>
   )
 }
@@ -31,15 +31,15 @@ export default function Dashboard() {
 
   return (
     <div>
-      <h1 className="font-display text-3xl text-espresso mb-8">Dashboard</h1>
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+      <h1 className="font-display text-xl text-espresso mb-5">Dashboard</h1>
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-5">
         <StatCard label="Total Revenue" value={formatPrice(stats.total_revenue_cents)} />
         <StatCard label="Paid Orders" value={counts.paid || 0} />
         <StatCard label="Pending" value={counts.pending || 0} />
         <StatCard label="Fulfilled" value={counts.fulfilled || 0} />
       </div>
       <div>
-        <h2 className="font-display text-xl text-espresso mb-4">Low Stock</h2>
+        <h2 className="font-display text-base text-espresso mb-3">Low Stock</h2>
         {stats.low_stock.length === 0 ? (
           <p className="font-body text-sm text-clay/60">All products well stocked.</p>
         ) : (

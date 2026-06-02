@@ -62,26 +62,26 @@ export default function ProductForm({ product, onSaved, onCancel }) {
     <form onSubmit={handleSubmit} className="space-y-4 max-w-lg">
       <div>
         <label className="block font-body text-sm text-clay mb-1">Name</label>
-        <input value={form.name} onChange={update('name')} required className="w-full border border-sand rounded-xl px-4 py-3 font-body text-sm text-espresso bg-parchment focus:outline-none focus:border-clay" />
+        <input value={form.name} onChange={update('name')} required className="w-full border border-sand rounded-xl px-3 py-2 font-body text-sm text-espresso bg-parchment focus:outline-none focus:border-clay" />
       </div>
       <div>
         <label className="block font-body text-sm text-clay mb-1">Category</label>
-        <select value={form.category} onChange={update('category')} className="w-full border border-sand rounded-xl px-4 py-3 font-body text-sm text-espresso bg-parchment focus:outline-none focus:border-clay">
+        <select value={form.category} onChange={update('category')} className="w-full border border-sand rounded-xl px-3 py-2 font-body text-sm text-espresso bg-parchment focus:outline-none focus:border-clay">
           {CATEGORIES.map((c) => <option key={c} value={c}>{c.charAt(0).toUpperCase() + c.slice(1)}</option>)}
         </select>
       </div>
       <div>
         <label className="block font-body text-sm text-clay mb-1">Description</label>
-        <textarea value={form.description} onChange={update('description')} rows={3} className="w-full border border-sand rounded-xl px-4 py-3 font-body text-sm text-espresso bg-parchment focus:outline-none focus:border-clay resize-none" />
+        <textarea value={form.description} onChange={update('description')} rows={3} className="w-full border border-sand rounded-xl px-3 py-2 font-body text-sm text-espresso bg-parchment focus:outline-none focus:border-clay resize-none" />
       </div>
       <div className="grid grid-cols-2 gap-4">
         <div>
           <label className="block font-body text-sm text-clay mb-1">Price (USD)</label>
-          <input type="number" min="0.01" step="0.01" value={form.price_dollars} onChange={update('price_dollars')} required className="w-full border border-sand rounded-xl px-4 py-3 font-body text-sm text-espresso bg-parchment focus:outline-none focus:border-clay" />
+          <input type="number" min="0.01" step="0.01" value={form.price_dollars} onChange={update('price_dollars')} required className="w-full border border-sand rounded-xl px-3 py-2 font-body text-sm text-espresso bg-parchment focus:outline-none focus:border-clay" />
         </div>
         <div>
           <label className="block font-body text-sm text-clay mb-1">Stock</label>
-          <input type="number" min="0" value={form.stock} onChange={update('stock')} required className="w-full border border-sand rounded-xl px-4 py-3 font-body text-sm text-espresso bg-parchment focus:outline-none focus:border-clay" />
+          <input type="number" min="0" value={form.stock} onChange={update('stock')} required className="w-full border border-sand rounded-xl px-3 py-2 font-body text-sm text-espresso bg-parchment focus:outline-none focus:border-clay" />
         </div>
       </div>
       <label className="flex items-center gap-3 font-body text-sm text-clay cursor-pointer">
@@ -98,10 +98,10 @@ export default function ProductForm({ product, onSaved, onCancel }) {
 
       {error && <p className="text-red-600 font-body text-sm">{error}</p>}
       <div className="flex gap-3">
-        <button type="submit" disabled={saving} className="bg-espresso hover:bg-clay disabled:opacity-50 text-cream px-6 py-3 rounded-xl font-body text-sm transition-colors">
+        <button type="submit" disabled={saving} className="bg-espresso hover:bg-clay disabled:opacity-50 text-cream px-4 py-2 rounded-xl font-body text-sm transition-colors">
           {saving ? 'Saving...' : isEdit ? 'Save Changes' : 'Create Product'}
         </button>
-        <button type="button" onClick={onCancel} className="bg-sand hover:bg-parchment text-espresso px-6 py-3 rounded-xl font-body text-sm transition-colors">
+        <button type="button" onClick={onCancel} className="bg-sand hover:bg-parchment text-espresso px-4 py-2 rounded-xl font-body text-sm transition-colors">
           Cancel
         </button>
       </div>

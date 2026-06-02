@@ -9,7 +9,7 @@ export default function AdminLayout() {
 
   return (
     <div className="min-h-screen bg-cream flex">
-      <aside className="w-56 bg-espresso flex flex-col">
+      <aside className="w-44 bg-espresso flex flex-col">
         <div className="p-6 border-b border-white/10">
           <span className="font-display text-xl text-cream tracking-widest">NUMME</span>
           <p className="font-body text-xs text-sand/60 mt-1">Admin</p>
@@ -43,7 +43,7 @@ export default function AdminLayout() {
           </button>
         </div>
       </aside>
-      <main className="flex-1 overflow-auto p-8">
+      <main className="flex-1 overflow-auto p-4 lg:p-6">
         <Outlet />
       </main>
     </div>

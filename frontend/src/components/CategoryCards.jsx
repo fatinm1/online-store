@@ -53,7 +53,7 @@ function CategoryCard({ href, label, sub, img, delay }) {
         const el = document.querySelector(href)
         if (el) window.scrollTo({ top: el.offsetTop - 120, behavior: 'smooth' })
       }}
-      className={`category-card block bg-parchment rounded-xl overflow-hidden cursor-pointer h-[500px] relative shadow-lg border border-clay/5 reveal-hidden ${visible ? 'reveal-visible' : ''}`}
+      className={`category-card block bg-parchment rounded-xl overflow-hidden cursor-pointer h-[260px] md:h-[320px] lg:h-[380px] xl:h-[500px] relative shadow-lg border border-clay/5 reveal-hidden ${visible ? 'reveal-visible' : ''}`}
     >
       <img
         src={img}
@@ -69,9 +69,9 @@ function CategoryCard({ href, label, sub, img, delay }) {
         onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = 'rgba(0,0,0,0.55)' }}
         onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = 'rgba(0,0,0,0.3)' }}
       />
-      <div className="absolute bottom-8 left-8 text-cream">
-        <h3 className="cat-label text-4xl tracking-tighter font-display">{label}</h3>
-        <p className="cat-sub text-sm uppercase tracking-widest mt-2">{sub}</p>
+      <div className="absolute bottom-5 left-5 xl:bottom-8 xl:left-8 text-cream">
+        <h3 className="cat-label text-2xl xl:text-4xl tracking-tighter font-display">{label}</h3>
+        <p className="cat-sub text-xs xl:text-sm uppercase tracking-widest mt-1 xl:mt-2">{sub}</p>
       </div>
     </a>
   )

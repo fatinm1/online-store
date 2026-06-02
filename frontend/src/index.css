@@ -35,6 +35,11 @@
 .tracking-tighter-extra {
   letter-spacing: -4.75px;
 }
+@media (max-width: 1440px) {
+  .tracking-tighter-extra {
+    letter-spacing: -3px;
+  }
+}
 @media (max-width: 1024px) {
   .tracking-tighter-extra {
     letter-spacing: -2px;

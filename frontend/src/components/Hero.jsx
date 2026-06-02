@@ -37,10 +37,10 @@ export default function Hero() {
         ref={sectionRef}
         className={`w-full max-w-[1446px] mx-auto px-4 lg:px-0 mt-8 reveal-hidden ${sectionVisible ? 'reveal-visible' : ''}`}
       >
-        <div className="bg-parchment rounded-xl p-8 lg:p-16 flex flex-col lg:flex-row justify-between items-end min-h-[412px] border border-clay/5 shadow-xl relative overflow-hidden">
+        <div className="bg-parchment rounded-xl p-5 lg:p-8 xl:p-16 flex flex-col lg:flex-row justify-between items-end min-h-[260px] lg:min-h-[320px] xl:min-h-[412px] border border-clay/5 shadow-xl relative overflow-hidden">
           <div className="absolute top-0 right-0 w-64 h-64 bg-clay/5 rounded-full blur-3xl -mr-32 -mt-32" />
           <div className="max-w-4xl space-y-6 relative z-10">
-            <h1 className="text-[60px] md:text-[80px] lg:text-[110px] leading-[0.85] lg:leading-[100px] tracking-tighter-extra font-normal font-display">
+            <h1 className="text-[36px] md:text-[50px] lg:text-[64px] xl:text-[80px] 2xl:text-[110px] leading-[0.9] tracking-tighter-extra font-normal font-display">
               <span
                 ref={line1Ref}
                 className={`inline-block hover:italic transition-all duration-700 reveal-hidden ${line1Visible ? 'reveal-visible' : ''}`}
@@ -57,7 +57,7 @@ export default function Hero() {
             </h1>
             <p
               ref={subtitleRef}
-              className={`text-xl md:text-2xl lg:text-[26px] leading-snug tracking-tight max-w-[600px] opacity-80 font-body reveal-hidden ${subtitleVisible ? 'reveal-visible' : ''}`}
+              className={`text-sm md:text-base lg:text-lg xl:text-xl leading-snug tracking-tight max-w-[500px] opacity-80 font-body reveal-hidden ${subtitleVisible ? 'reveal-visible' : ''}`}
             >
               Modest luxury for the modern wardrobe. Abayas, thobes, and accessories
               crafted for those who believe faith and beauty belong together.
@@ -76,7 +76,7 @@ export default function Hero() {
                 const el = document.querySelector('#abayas')
                 if (el) window.scrollTo({ top: el.offsetTop - 120, behavior: 'smooth' })
               }}
-              className="inline-flex items-center justify-center w-[200px] h-[50px] bg-espresso text-cream rounded-2xl text-base font-body hover:bg-clay hover:scale-105 active:scale-95 transition-all duration-300 shadow-xl group"
+              className="inline-flex items-center justify-center w-[160px] h-[42px] bg-espresso text-cream rounded-xl text-sm font-body hover:bg-clay hover:scale-105 active:scale-95 transition-all duration-300 shadow-xl group"
             >
               Explore the Edit
               <span className="ml-2 group-hover:translate-x-1 transition-transform">→</span>
@@ -98,16 +98,16 @@ function ParallaxHeroImage({ imgRef }) {
       ref={ref}
       className={`w-full max-w-[1446px] mx-auto px-4 lg:px-0 mt-8 reveal-hidden ${visible ? 'reveal-visible' : ''}`}
     >
-      <div className="relative rounded-xl overflow-hidden min-h-[400px] lg:min-h-[700px] shadow-2xl">
+      <div className="relative rounded-xl overflow-hidden min-h-[200px] md:min-h-[300px] lg:min-h-[420px] xl:min-h-[560px] 2xl:min-h-[700px] shadow-2xl">
         <img
           ref={imgRef}
-          src="https://images.pexels.com/photos/8285167/pexels-photo-8285167.jpeg?w=1446&h=700&fit=crop"
+          src="https://images.pexels.com/photos/17734329/pexels-photo-17734329.jpeg?w=1446&h=700&fit=crop"
           alt="NUMME modest luxury collection"
           className="w-full h-full object-cover absolute inset-0 transition-transform duration-100 ease-out sepia-[0.15]"
           style={{ willChange: 'transform' }}
         />
         <div className="absolute inset-0 bg-gradient-to-t from-espresso/40 to-transparent" />
-        <div className="absolute bottom-12 left-12">
+        <div className="absolute bottom-6 left-6 xl:bottom-10 xl:left-10">
           <span className="bg-cream text-clay px-6 py-3 rounded-full text-xs uppercase tracking-widest font-bold shadow-lg animate-pulse">
             New Collection 2025
           </span>

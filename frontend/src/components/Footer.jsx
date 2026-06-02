@@ -1,9 +1,9 @@
 export default function Footer() {
   return (
-    <footer className="w-full max-w-[1446px] mx-auto px-4 lg:px-0 py-16">
-      <div className="bg-parchment rounded-xl p-8 lg:p-16 grid grid-cols-1 md:grid-cols-4 gap-12 border border-clay/5 shadow-sm">
+    <footer className="w-full max-w-[1446px] mx-auto px-4 lg:px-0 py-10 xl:py-16">
+      <div className="bg-parchment rounded-xl p-5 lg:p-8 xl:p-16 grid grid-cols-1 md:grid-cols-4 gap-6 xl:gap-10 border border-clay/5 shadow-sm">
         <div className="col-span-1 md:col-span-2 space-y-6">
-          <h2 className="text-3xl tracking-tighter font-display">NUMME</h2>
+          <h2 className="text-xl xl:text-3xl tracking-tighter font-display">NUMME</h2>
           <p className="text-espresso/60 max-w-sm font-body">
             Modest luxury clothing for the modern, considered wardrobe. Abayas, thobes,
             and accessories crafted with intention.
