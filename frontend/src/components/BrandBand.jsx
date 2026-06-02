@@ -51,8 +51,8 @@ export default function BrandBand() {
             style={{ minHeight: '400px' }}
           >
             <img
-              src="https://images.pexels.com/photos/8293774/pexels-photo-8293774.jpeg?w=800&h=600&fit=crop"
-              alt="NUMME quality"
+              src="https://images.pexels.com/photos/3735641/pexels-photo-3735641.jpeg?w=800&h=600&fit=crop"
+              alt="NUMME craftsmanship"
               className="w-full h-full object-cover hover:scale-105 transition-transform duration-[2s] sepia-[0.15]"
             />
           </div>

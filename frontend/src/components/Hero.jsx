@@ -101,8 +101,8 @@ function ParallaxHeroImage({ imgRef }) {
       <div className="relative rounded-xl overflow-hidden min-h-[400px] lg:min-h-[700px] shadow-2xl">
         <img
           ref={imgRef}
-          src="https://images.pexels.com/photos/374677/pexels-photo-374677.jpeg?w=1446&h=700&fit=crop"
-          alt="NUMME modest luxury boutique"
+          src="https://images.pexels.com/photos/8285167/pexels-photo-8285167.jpeg?w=1446&h=700&fit=crop"
+          alt="NUMME modest luxury collection"
           className="w-full h-full object-cover absolute inset-0 transition-transform duration-100 ease-out sepia-[0.15]"
           style={{ willChange: 'transform' }}
         />

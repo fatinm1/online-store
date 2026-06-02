@@ -6,21 +6,21 @@ const CATEGORIES = [
     href: '#abayas',
     label: 'The Abaya Edit',
     sub: 'Explore Collection',
-    img: 'https://images.pexels.com/photos/18786378/pexels-photo-18786378.jpeg?w=600&h=800&fit=crop',
+    img: 'https://images.pexels.com/photos/7148620/pexels-photo-7148620.jpeg?w=600&h=800&fit=crop',
   },
   {
     id: 'thobes',
     href: '#thobes',
     label: 'The Thobe Edit',
     sub: 'Heritage Tailoring',
-    img: 'https://images.pexels.com/photos/32472187/pexels-photo-32472187.jpeg?w=600&h=800&fit=crop',
+    img: 'https://images.pexels.com/photos/1536619/pexels-photo-1536619.jpeg?w=600&h=800&fit=crop',
   },
   {
     id: 'accessories',
     href: '#accessories',
     label: 'Finishing Touches',
     sub: 'Curated Details',
-    img: 'https://images.pexels.com/photos/32879870/pexels-photo-32879870.jpeg?w=600&h=800&fit=crop',
+    img: 'https://images.pexels.com/photos/965981/pexels-photo-965981.jpeg?w=600&h=800&fit=crop',
   },
 ]
 
