@@ -2,8 +2,10 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import { useState } from 'react'
 import { CartProvider } from './context/CartContext'
 import { AuthProvider } from './context/AuthContext'
+import CustomCursor from './components/CustomCursor'
 import Header from './components/Header'
 import Hero from './components/Hero'
+import CategoryCards from './components/CategoryCards'
 import ProductGrid from './components/ProductGrid'
 import CartDrawer from './components/CartDrawer'
 import CheckoutModal from './components/CheckoutModal'
@@ -20,16 +22,26 @@ function Storefront() {
   const [checkoutOpen, setCheckoutOpen] = useState(false)
 
   return (
-    <div className="max-w-7xl mx-auto">
+    <div className="font-body bg-cream text-espresso overflow-x-hidden min-h-screen flex flex-col w-full relative">
+      {/* Grain overlay sits above everything */}
+      <div className="grain-overlay" aria-hidden="true" />
+
+      {/* Custom cursor (desktop only via CSS) */}
+      <CustomCursor />
+
       <Header onCartOpen={() => setCartOpen(true)} />
-      <Hero />
-      <div className="px-0 space-y-4">
-        <ProductGrid id="abayas" category="abaya" title="The Abaya Edit" />
-        <ProductGrid id="thobes" category="thobe" title="The Thobe Edit" />
+
+      <main className="flex-grow pb-8">
+        <Hero />
+        <CategoryCards />
+        <ProductGrid id="abayas"      category="abaya"     title="The Abaya Edit" />
+        <ProductGrid id="thobes"      category="thobe"     title="The Thobe Edit" />
         <ProductGrid id="accessories" category="accessory" title="Finishing Touches" />
-      </div>
-      <BrandBand />
+        <BrandBand />
+      </main>
+
       <Footer />
+
       <CartDrawer
         open={cartOpen}
         onClose={() => setCartOpen(false)}

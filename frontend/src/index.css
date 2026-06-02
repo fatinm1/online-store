@@ -2,51 +2,153 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ─── Fonts ─────────────────────────────────────────────────────────────── */
 @layer base {
   html {
     font-family: 'Questrial', system-ui, sans-serif;
     background-color: #f7f2e9;
     color: #2b1d12;
     scroll-behavior: smooth;
+    overflow-x: hidden;
   }
 
   h1, h2, h3, h4, h5 {
     font-family: 'Fraunces', Georgia, serif;
   }
 
-  /* Grain overlay */
-  body::before {
-    content: '';
-    position: fixed;
-    inset: 0;
-    pointer-events: none;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
-    background-size: 200px;
-    z-index: 9999;
-    opacity: 0.3;
-  }
-
   /* Thin scrollbar */
-  ::-webkit-scrollbar {
-    width: 4px;
-  }
-  ::-webkit-scrollbar-track {
-    background: #f7f2e9;
-  }
-  ::-webkit-scrollbar-thumb {
-    background: #9a6a48;
-    border-radius: 2px;
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: #f7f2e9; }
+  ::-webkit-scrollbar-thumb { background: #9a6a48; border-radius: 10px; }
+
+  /* Smooth transitions on interactive elements */
+  * {
+    transition:
+      background-color 0.3s ease,
+      border-color 0.3s ease,
+      color 0.3s ease,
+      box-shadow 0.3s ease;
   }
 }
 
-@layer utilities {
-  .reveal {
-    opacity: 0;
-    transform: translateY(20px);
-    transition: opacity 0.6s ease, transform 0.6s ease;
+/* ─── Tracking tighter extra (responsive) ───────────────────────────────── */
+.tracking-tighter-extra {
+  letter-spacing: -4.75px;
+}
+@media (max-width: 1024px) {
+  .tracking-tighter-extra {
+    letter-spacing: -2px;
   }
-  .reveal.visible {
-    opacity: 1;
-    transform: translateY(0);
-  }
+}
+
+/* ─── Custom cursor ──────────────────────────────────────────────────────── */
+.custom-cursor {
+  width: 20px;
+  height: 20px;
+  background: #9a6a48;
+  border-radius: 50%;
+  position: fixed;
+  pointer-events: none;
+  z-index: 10000;
+  mix-blend-mode: difference;
+  transition: transform 0.15s ease-out;
+  transform: translate(-50%, -50%);
+  display: none;
+}
+@media (pointer: fine) {
+  .custom-cursor { display: block; }
+}
+
+/* ─── Grain overlay ──────────────────────────────────────────────────────── */
+.grain-overlay {
+  position: fixed;
+  top: 0; left: 0; width: 100%; height: 100%;
+  background: url('https://grainy-gradients.vercel.app/noise.svg');
+  opacity: 0.05;
+  pointer-events: none;
+  z-index: 9999;
+  mix-blend-mode: multiply;
+}
+
+/* ─── Scroll reveal: base hidden state ──────────────────────────────────── */
+.reveal-hidden {
+  opacity: 0;
+  transform: translateY(40px);
+  transition: opacity 1.2s cubic-bezier(0.22, 1, 0.36, 1),
+              transform 1.2s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.reveal-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Directional variants used by mission section */
+.reveal-from-left.reveal-hidden  { transform: translateX(-100px); opacity: 0; }
+.reveal-from-right.reveal-hidden { transform: translateX(100px); opacity: 0; }
+.reveal-from-bottom.reveal-hidden{ transform: translateY(100px); opacity: 0; }
+.reveal-from-left.reveal-visible,
+.reveal-from-right.reveal-visible,
+.reveal-from-bottom.reveal-visible {
+  transform: translate(0, 0);
+  opacity: 1;
+}
+
+/* ─── Deck spread (product card pile-to-grid animation) ─────────────────── */
+.deck-card {
+  transition:
+    transform 1.6s cubic-bezier(0.16, 1, 0.3, 1),
+    opacity   1.6s ease-out;
+  transform-origin: center bottom;
+  will-change: transform, opacity;
+}
+.deck-card.deck-hidden {
+  opacity: 0;
+  transform: translate(var(--deck-x), var(--deck-y)) rotate(var(--deck-r)) scale(0.85);
+}
+.deck-card.deck-visible {
+  opacity: 1;
+  transform: translate(0, 0) rotate(0deg) scale(1);
+}
+.deck-card.deck-visible:hover {
+  transform: translateY(-12px) rotate(0.8deg) scale(1.02);
+  z-index: 20;
+}
+
+/* ─── Floating island animation ──────────────────────────────────────────── */
+@keyframes islandFloat {
+  0%, 100% { transform: translateY(0px); }
+  50%       { transform: translateY(-15px); }
+}
+.animation-float { animation: islandFloat 8s ease-in-out infinite; }
+
+/* ─── Category card reveal on hover ─────────────────────────────────────── */
+.category-card .cat-label {
+  transform: translateY(16px);
+  transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.category-card:hover .cat-label {
+  transform: translateY(0);
+}
+.category-card .cat-sub {
+  opacity: 0;
+  transition: opacity 0.7s ease 0.1s;
+}
+.category-card:hover .cat-sub {
+  opacity: 0.8;
+}
+
+/* ─── Nav underline slide ────────────────────────────────────────────────── */
+.nav-link::after {
+  content: '';
+  position: absolute;
+  bottom: -4px; left: 0;
+  width: 0; height: 1px;
+  background: currentColor;
+  transition: width 0.3s ease;
+}
+.nav-link:hover::after { width: 100%; }
+
+/* ─── Product image tilt ─────────────────────────────────────────────────── */
+.tilt-image {
+  transition: transform 0.3s ease, filter 0.3s ease;
 }

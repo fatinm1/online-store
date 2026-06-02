@@ -15,6 +15,13 @@ export default {
         display: ['"Fraunces"', 'Georgia', 'serif'],
         body: ['"Questrial"', 'system-ui', 'sans-serif'],
       },
+      letterSpacing: {
+        'tighter-extra': '-4.75px',
+      },
+      boxShadow: {
+        'xl': '0 20px 40px rgba(154, 106, 72, 0.08)',
+        'inner-soft': 'inset 0 2px 10px rgba(43, 29, 18, 0.03)',
+      },
     },
   },
   plugins: [],
