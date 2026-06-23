@@ -4,23 +4,35 @@ export default {
   theme: {
     extend: {
       colors: {
+        // Legacy warm palette — kept for admin panel compatibility
         clay: '#9a6a48',
         espresso: '#2b1d12',
         cream: '#f7f2e9',
         parchment: '#efe7d6',
         sand: '#e3d6bf',
         gold: '#b08a52',
+        // Dark editorial storefront theme
+        obsidian: '#080808',
+        onyx: '#0f0f0f',
+        charcoal: '#181818',
+        iron: '#272727',
+        ivory: '#ede8de',
+        pearl: '#b8b0a4',
+        mist: '#6e6660',
+        accent: '#b8965a',
       },
       fontFamily: {
-        display: ['"Fraunces"', 'Georgia', 'serif'],
-        body: ['"Questrial"', 'system-ui', 'sans-serif'],
+        display: ['"Cormorant Garamond"', 'Georgia', 'serif'],
+        script: ['"Great Vibes"', 'cursive'],
+        body: ['"DM Sans"', 'system-ui', 'sans-serif'],
       },
       letterSpacing: {
-        'tighter-extra': '-4.75px',
+        'tighter-extra': '-0.04em',
+        'widest-xl': '0.25em',
       },
       boxShadow: {
-        'xl': '0 20px 40px rgba(154, 106, 72, 0.08)',
-        'inner-soft': 'inset 0 2px 10px rgba(43, 29, 18, 0.03)',
+        gold: '0 0 40px rgba(184,150,90,0.15)',
+        card: '0 4px 32px rgba(0,0,0,0.5)',
       },
     },
   },
