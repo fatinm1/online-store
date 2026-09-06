@@ -104,7 +104,7 @@ def delete_product(product_id):
 @csrf_required
 @limiter.limit("20 per minute")
 def upload_image(product_id):
-    product = Product.query.get(product_id)
+    product = db.session.get(Product, product_id)
     if not product:
         return jsonify({"error": "Not found"}), 404
 
