@@ -45,6 +45,13 @@ def create_app(config=None):
         content_security_policy=csp,
         referrer_policy="no-referrer",
         frame_options="DENY",
+        # Talisman defaults these to Lax/True itself, silently overriding
+        # whatever Config/ProductionConfig set. Pass them through explicitly
+        # so the cross-site (Vercel <-> Railway) cookie in prod keeps
+        # SameSite=None; without this the browser drops the session cookie
+        # on the next cross-origin fetch and the admin looks logged out.
+        session_cookie_samesite=app.config["SESSION_COOKIE_SAMESITE"],
+        session_cookie_secure=app.config["SESSION_COOKIE_SECURE"],
     )
 
     # Blueprints
