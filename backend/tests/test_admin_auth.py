@@ -30,7 +30,23 @@ def test_admin_me_authenticated(client, admin_user):
     client.post("/api/admin/login", json={"email": "admin@test.com", "password": "secret123"})
     resp = client.get("/api/admin/me")
     assert resp.status_code == 200
-    assert resp.get_json()["email"] == "admin@test.com"
+    data = resp.get_json()
+    assert data["admin"]["email"] == "admin@test.com"
+    assert "csrf_token" in data
+
+
+def test_admin_me_csrf_token_usable_for_mutations(client, admin_user):
+    # A session resumed via a fresh /me call (no /login in this request
+    # cycle) must still yield a CSRF token that works for mutations --
+    # this is what a page reload or a new tab on an existing session does.
+    client.post("/api/admin/login", json={"email": "admin@test.com", "password": "secret123"})
+    me_data = client.get("/api/admin/me").get_json()
+    resp = client.post(
+        "/api/admin/products",
+        json={"name": "X", "category": "abaya", "price_cents": 100, "stock": 1},
+        headers={"X-CSRF-Token": me_data["csrf_token"]},
+    )
+    assert resp.status_code == 201
 
 
 def test_admin_logout(client, admin_user):

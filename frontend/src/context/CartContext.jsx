@@ -1,9 +1,62 @@
-import { createContext, useContext, useState, useCallback } from 'react'
+import { createContext, useContext, useState, useCallback, useEffect } from 'react'
+import { api } from '../api/client'
 
+const STORAGE_KEY = 'numme_cart'
 const CartContext = createContext(null)
 
+function loadFromStorage() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY)
+    if (!raw) return []
+    const parsed = JSON.parse(raw)
+    return Array.isArray(parsed) ? parsed : []
+  } catch {
+    // Corrupted value — reset to empty rather than crash
+    return []
+  }
+}
+
+function saveToStorage(items) {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(items))
+  } catch {
+    // Storage unavailable or quota exceeded — fail silently
+  }
+}
+
 export function CartProvider({ children }) {
-  const [items, setItems] = useState([])
+  const [items, setItems] = useState(() => loadFromStorage())
+
+  // On mount: re-validate stored items against the live catalog.
+  // Drops items that no longer exist, are inactive, or are out of stock.
+  // Refreshes names and prices from the server so stale data is never shown.
+  useEffect(() => {
+    const stored = loadFromStorage()
+    if (stored.length === 0) return
+    api.getProducts()
+      .then((catalog) => {
+        const liveMap = new Map(catalog.map((p) => [p.id, p]))
+        const validated = stored
+          .filter((item) => {
+            const live = liveMap.get(item.product?.id)
+            return live && live.in_stock
+          })
+          .map((item) => ({
+            ...item,
+            product: { ...item.product, ...liveMap.get(item.product.id) },
+          }))
+        setItems(validated)
+      })
+      .catch(() => {
+        // Network unavailable — keep stored cart as display-only convenience.
+        // The server always recomputes the real total at checkout.
+      })
+  }, [])
+
+  // Persist to localStorage whenever the cart changes.
+  useEffect(() => {
+    saveToStorage(items)
+  }, [items])
 
   const addItem = useCallback((product) => {
     setItems((prev) => {

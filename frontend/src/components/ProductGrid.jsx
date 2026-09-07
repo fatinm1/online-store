@@ -1,13 +1,17 @@
 import { useState, useEffect } from 'react'
 import { api } from '../api/client'
+import { useSectionReveal } from '../hooks/useReveal'
 import ProductCard from './ProductCard'
 
-export default function ProductGrid({ category, title, id }) {
+export default function ProductGrid({ category, title }) {
   const [products, setProducts] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
+  const [gridRef, deckVisible] = useSectionReveal()
 
   useEffect(() => {
+    setLoading(true)
+    setError(null)
     api.getProducts(category)
       .then(setProducts)
       .catch((e) => setError(e.message))
@@ -15,32 +19,40 @@ export default function ProductGrid({ category, title, id }) {
   }, [category])
 
   return (
-    <section id={id} className="px-4 mb-16">
-      <h2 className="font-display text-3xl text-espresso mb-8">{title}</h2>
-      {loading && (
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-          {[1, 2, 3, 4].map((k) => (
-            <div key={k} className="bg-parchment rounded-2xl aspect-[3/4] animate-pulse" />
-          ))}
-        </div>
+    <section className="max-w-[1440px] mx-auto px-6 lg:px-12 py-12">
+      {title && (
+        <h2 className="font-display text-4xl lg:text-5xl text-ivory font-light mb-12">{title}</h2>
       )}
-      {error && (
-        <p className="text-clay font-body text-sm py-8 text-center">
-          Could not load products. Please try again.
-        </p>
-      )}
-      {!loading && !error && products.length === 0 && (
-        <p className="text-clay/60 font-body text-sm py-8 text-center">
-          No items available right now.
-        </p>
-      )}
-      {!loading && !error && products.length > 0 && (
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-          {products.map((p) => (
-            <ProductCard key={p.id} product={p} />
-          ))}
-        </div>
-      )}
+
+      <div
+        ref={gridRef}
+        className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 lg:gap-8"
+      >
+        {loading && Array.from({ length: 8 }).map((_, k) => (
+          <div key={k} className="aspect-[3/4] bg-charcoal animate-pulse" />
+        ))}
+
+        {error && (
+          <p className="col-span-4 text-mist font-body text-sm text-center py-16">
+            Could not load products. Please try again.
+          </p>
+        )}
+
+        {!loading && !error && products.length === 0 && (
+          <p className="col-span-4 text-mist font-body text-sm text-center py-16">
+            No items available right now.
+          </p>
+        )}
+
+        {!loading && !error && products.map((p, idx) => (
+          <ProductCard
+            key={p.id}
+            product={p}
+            deckVisible={deckVisible}
+            deckIndex={idx}
+          />
+        ))}
+      </div>
     </section>
   )
 }

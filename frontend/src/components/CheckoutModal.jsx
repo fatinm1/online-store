@@ -6,6 +6,18 @@ import { useCart } from '../context/CartContext'
 
 const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY || '')
 
+const STRIPE_APPEARANCE = {
+  theme: 'night',
+  variables: {
+    colorPrimary: '#b8965a',
+    colorBackground: '#0f0f0f',
+    colorText: '#ede8de',
+    colorDanger: '#e57373',
+    fontFamily: '"DM Sans", system-ui, sans-serif',
+    borderRadius: '0px',
+  },
+}
+
 function formatPrice(cents) {
   return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(cents / 100)
 }
@@ -36,15 +48,15 @@ function PaymentForm({ amountCents, onSuccess }) {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
+    <form onSubmit={handleSubmit} className="space-y-5">
       <PaymentElement />
-      {error && <p className="text-red-600 text-sm font-body">{error}</p>}
+      {error && <p className="text-red-400 text-sm font-body">{error}</p>}
       <button
         type="submit"
         disabled={!stripe || processing}
-        className="w-full bg-espresso hover:bg-clay disabled:opacity-50 text-cream py-3 rounded-xl font-body transition-colors"
+        className="w-full bg-ivory text-obsidian py-3.5 font-body text-xs uppercase tracking-widest disabled:opacity-50 hover:bg-accent transition-colors duration-300"
       >
-        {processing ? 'Processing...' : `Pay ${formatPrice(amountCents)}`}
+        {processing ? 'Processing…' : `Pay ${formatPrice(amountCents)}`}
       </button>
     </form>
   )
@@ -90,51 +102,68 @@ export default function CheckoutModal({ open, onClose }) {
   if (!open) return null
 
   return (
-    <div className="fixed inset-0 bg-espresso/60 z-50 flex items-center justify-center p-4">
-      <div className="bg-cream rounded-2xl w-full max-w-md p-8 relative shadow-2xl">
-        <button onClick={handleClose} className="absolute top-4 right-4 text-clay hover:text-espresso">
-          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+    <div className="fixed inset-0 bg-obsidian/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+      <div className="bg-onyx border border-iron w-full max-w-md p-8 relative">
+        <button
+          onClick={handleClose}
+          className="absolute top-5 right-5 text-mist hover:text-ivory transition-colors"
+          aria-label="Close checkout"
+        >
+          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
           </svg>
         </button>
 
         {success ? (
-          <div className="text-center py-8">
-            <div className="w-16 h-16 bg-gold/20 rounded-full flex items-center justify-center mx-auto mb-4">
-              <svg className="w-8 h-8 text-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+          <div className="text-center py-10">
+            <div className="w-14 h-14 border border-accent/40 rounded-full flex items-center justify-center mx-auto mb-6">
+              <svg className="w-7 h-7 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
               </svg>
             </div>
-            <h2 className="font-display text-2xl text-espresso mb-2">Thank you!</h2>
-            <p className="font-body text-clay/70 text-sm">Your order has been received. A confirmation will be sent to {email}.</p>
-            <button onClick={handleClose} className="mt-6 bg-espresso text-cream px-6 py-2 rounded-xl font-body text-sm">
+            <h2 className="font-display text-2xl text-ivory font-light mb-3">Thank you.</h2>
+            <p className="font-body text-pearl text-sm leading-relaxed">
+              Your order has been received.
+              {email && ` A confirmation will be sent to ${email}.`}
+            </p>
+            <button
+              onClick={handleClose}
+              className="mt-8 bg-ivory text-obsidian px-8 py-3 font-body text-xs uppercase tracking-widest hover:bg-accent transition-colors duration-300"
+            >
               Continue Shopping
             </button>
           </div>
         ) : !clientSecret ? (
           <div>
-            <h2 className="font-display text-2xl text-espresso mb-6">Checkout</h2>
-            <label className="block font-body text-sm text-clay mb-1">Email (optional)</label>
+            <h2 className="font-display text-2xl text-ivory font-light mb-8">Checkout</h2>
+            <label className="block font-body text-xs uppercase tracking-widest text-mist mb-2">
+              Email (optional)
+            </label>
             <input
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="you@example.com"
-              className="w-full border border-sand rounded-xl px-4 py-3 font-body text-sm text-espresso bg-parchment focus:outline-none focus:border-clay mb-4"
+              className="w-full bg-charcoal border border-iron text-ivory font-body text-sm px-4 py-3 focus:outline-none focus:border-accent mb-6"
             />
-            {intentError && <p className="text-red-600 text-sm font-body mb-3">{intentError}</p>}
+            {intentError && (
+              <p className="text-red-400 text-sm font-body mb-4">{intentError}</p>
+            )}
             <button
               onClick={startCheckout}
               disabled={loadingIntent || items.length === 0}
-              className="w-full bg-espresso hover:bg-clay disabled:opacity-50 text-cream py-3 rounded-xl font-body transition-colors"
+              className="w-full bg-ivory text-obsidian py-3.5 font-body text-xs uppercase tracking-widest disabled:opacity-50 hover:bg-accent transition-colors duration-300"
             >
-              {loadingIntent ? 'Loading...' : 'Continue to Payment'}
+              {loadingIntent ? 'Loading…' : 'Continue to Payment'}
             </button>
           </div>
         ) : (
           <div>
-            <h2 className="font-display text-2xl text-espresso mb-6">Payment</h2>
-            <Elements stripe={stripePromise} options={{ clientSecret }}>
+            <h2 className="font-display text-2xl text-ivory font-light mb-8">Payment</h2>
+            <Elements
+              stripe={stripePromise}
+              options={{ clientSecret, appearance: STRIPE_APPEARANCE }}
+            >
               <PaymentForm amountCents={amountCents} onSuccess={handleSuccess} />
             </Elements>
           </div>

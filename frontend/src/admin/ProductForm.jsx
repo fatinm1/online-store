@@ -4,6 +4,9 @@ import ImageUploader from './ImageUploader'
 
 const CATEGORIES = ['abaya', 'thobe', 'accessory']
 
+const inputClass = 'w-full bg-charcoal border border-iron text-ivory font-body text-sm px-4 py-3 focus:outline-none focus:border-accent'
+const labelClass = 'block font-body text-xs uppercase tracking-widest text-mist mb-2'
+
 export default function ProductForm({ product, onSaved, onCancel }) {
   const isEdit = Boolean(product)
   const [form, setForm] = useState({
@@ -18,6 +21,11 @@ export default function ProductForm({ product, onSaved, onCancel }) {
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState(null)
   const [savedId, setSavedId] = useState(product?.id || null)
+
+  // A freshly-created (not pre-existing) product that now has an id: the
+  // form stays open so the admin can attach an image before returning to
+  // the list, since the image upload endpoint requires a product id.
+  const justCreated = !isEdit && Boolean(savedId)
 
   const update = (field) => (e) => {
     const val = e.target.type === 'checkbox' ? e.target.checked : e.target.value
@@ -44,13 +52,18 @@ export default function ProductForm({ product, onSaved, onCancel }) {
     }
     try {
       let saved
-      if (isEdit) {
-        saved = await adminApi.updateProduct(product.id, payload)
+      if (savedId) {
+        saved = await adminApi.updateProduct(savedId, payload)
       } else {
         saved = await adminApi.createProduct(payload)
         setSavedId(saved.id)
       }
-      onSaved(saved)
+      setImageUrl(saved.image_url || '')
+      if (isEdit) {
+        onSaved(saved)
+      }
+      // On a fresh create, stay on the form so the image uploader (now
+      // available since the product has an id) can be used right away.
     } catch (err) {
       setError(err.message)
     } finally {
@@ -59,50 +72,64 @@ export default function ProductForm({ product, onSaved, onCancel }) {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4 max-w-lg">
+    <form onSubmit={handleSubmit} className="space-y-5 max-w-lg">
       <div>
-        <label className="block font-body text-sm text-clay mb-1">Name</label>
-        <input value={form.name} onChange={update('name')} required className="w-full border border-sand rounded-xl px-4 py-3 font-body text-sm text-espresso bg-parchment focus:outline-none focus:border-clay" />
+        <label className={labelClass}>Name</label>
+        <input value={form.name} onChange={update('name')} required className={inputClass} />
       </div>
       <div>
-        <label className="block font-body text-sm text-clay mb-1">Category</label>
-        <select value={form.category} onChange={update('category')} className="w-full border border-sand rounded-xl px-4 py-3 font-body text-sm text-espresso bg-parchment focus:outline-none focus:border-clay">
+        <label className={labelClass}>Category</label>
+        <select value={form.category} onChange={update('category')} className={inputClass}>
           {CATEGORIES.map((c) => <option key={c} value={c}>{c.charAt(0).toUpperCase() + c.slice(1)}</option>)}
         </select>
       </div>
       <div>
-        <label className="block font-body text-sm text-clay mb-1">Description</label>
-        <textarea value={form.description} onChange={update('description')} rows={3} className="w-full border border-sand rounded-xl px-4 py-3 font-body text-sm text-espresso bg-parchment focus:outline-none focus:border-clay resize-none" />
+        <label className={labelClass}>Description</label>
+        <textarea value={form.description} onChange={update('description')} rows={3} className={`${inputClass} resize-none`} />
       </div>
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-2 gap-5">
         <div>
-          <label className="block font-body text-sm text-clay mb-1">Price (USD)</label>
-          <input type="number" min="0.01" step="0.01" value={form.price_dollars} onChange={update('price_dollars')} required className="w-full border border-sand rounded-xl px-4 py-3 font-body text-sm text-espresso bg-parchment focus:outline-none focus:border-clay" />
+          <label className={labelClass}>Price (USD)</label>
+          <input type="number" min="0.01" step="0.01" value={form.price_dollars} onChange={update('price_dollars')} required className={inputClass} />
         </div>
         <div>
-          <label className="block font-body text-sm text-clay mb-1">Stock</label>
-          <input type="number" min="0" value={form.stock} onChange={update('stock')} required className="w-full border border-sand rounded-xl px-4 py-3 font-body text-sm text-espresso bg-parchment focus:outline-none focus:border-clay" />
+          <label className={labelClass}>Stock</label>
+          <input type="number" min="0" value={form.stock} onChange={update('stock')} required className={inputClass} />
         </div>
       </div>
-      <label className="flex items-center gap-3 font-body text-sm text-clay cursor-pointer">
-        <input type="checkbox" checked={form.active} onChange={update('active')} className="rounded" />
+      <label className="flex items-center gap-3 font-body text-sm text-pearl cursor-pointer">
+        <input type="checkbox" checked={form.active} onChange={update('active')} />
         Active (visible on storefront)
       </label>
 
       {savedId && (
         <div>
-          <p className="font-body text-sm text-clay mb-2">Product Image</p>
+          <p className={labelClass}>Product Image</p>
           <ImageUploader productId={savedId} currentUrl={imageUrl} onUploaded={(url) => setImageUrl(url)} />
         </div>
       )}
 
-      {error && <p className="text-red-600 font-body text-sm">{error}</p>}
-      <div className="flex gap-3">
-        <button type="submit" disabled={saving} className="bg-espresso hover:bg-clay disabled:opacity-50 text-cream px-6 py-3 rounded-xl font-body text-sm transition-colors">
-          {saving ? 'Saving...' : isEdit ? 'Save Changes' : 'Create Product'}
+      {justCreated && (
+        <p className="font-body text-xs text-accent">
+          Product created. Add a photo above, then click Done.
+        </p>
+      )}
+
+      {error && <p className="font-body text-sm text-red-400">{error}</p>}
+      <div className="flex gap-4">
+        <button
+          type="submit"
+          disabled={saving}
+          className="bg-ivory text-obsidian px-6 py-3 font-body text-xs uppercase tracking-widest disabled:opacity-50 hover:bg-accent transition-colors duration-300"
+        >
+          {saving ? 'Saving...' : savedId ? 'Save Changes' : 'Create Product'}
         </button>
-        <button type="button" onClick={onCancel} className="bg-sand hover:bg-parchment text-espresso px-6 py-3 rounded-xl font-body text-sm transition-colors">
-          Cancel
+        <button
+          type="button"
+          onClick={() => (justCreated ? onSaved({ id: savedId, ...form, image_url: imageUrl }) : onCancel())}
+          className="border border-iron text-pearl px-6 py-3 font-body text-xs uppercase tracking-widest hover:border-accent hover:text-accent transition-colors"
+        >
+          {justCreated ? 'Done' : 'Cancel'}
         </button>
       </div>
     </form>

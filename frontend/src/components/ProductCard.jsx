@@ -1,59 +1,98 @@
-import { useEffect, useRef } from 'react'
+import { Link } from 'react-router-dom'
 import { useCart } from '../context/CartContext'
+import { useTilt } from '../hooks/useTilt'
+import { resolveImageUrl } from '../utils/media'
 
 function formatPrice(cents) {
   return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(cents / 100)
 }
 
-export default function ProductCard({ product }) {
-  const { addItem } = useCart()
-  const ref = useRef(null)
+const DECK_OFFSETS = [
+  { x: '-60px', y: '40px', r: '-12deg' },
+  { x: '-20px', y: '20px', r: '5deg' },
+  { x: '20px',  y: '30px', r: '-6deg' },
+  { x: '60px',  y: '50px', r: '10deg' },
+  { x: '-40px', y: '55px', r: '8deg' },
+  { x: '40px',  y: '15px', r: '-9deg' },
+]
 
-  useEffect(() => {
-    const el = ref.current
-    const observer = new IntersectionObserver(
-      ([entry]) => entry.isIntersecting && el.classList.add('visible'),
-      { threshold: 0.1 }
-    )
-    observer.observe(el)
-    return () => observer.disconnect()
-  }, [])
+export default function ProductCard({ product, deckVisible, deckIndex }) {
+  const { addItem } = useCart()
+  const cardRef = useTilt()
+  const offset = DECK_OFFSETS[deckIndex % DECK_OFFSETS.length]
+  const delay = 80 + deckIndex * 140
+
+  const isAvailable = product.in_stock
 
   return (
-    <article ref={ref} className="reveal group bg-parchment rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-shadow">
-      <div className="aspect-[3/4] bg-sand overflow-hidden">
-        {product.image_url ? (
-          <img
-            src={product.image_url}
-            alt={product.name}
-            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-          />
-        ) : (
-          <div className="w-full h-full flex items-center justify-center text-clay/40">
-            <svg className="w-16 h-16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1}
-                d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-            </svg>
-          </div>
-        )}
-      </div>
-      <div className="p-4">
-        <h3 className="font-display text-lg text-espresso mb-1">{product.name}</h3>
-        <p className="font-body text-sm text-clay/70 mb-3 line-clamp-2">{product.description}</p>
-        <div className="flex items-center justify-between">
-          <span className="font-body text-espresso font-medium">{formatPrice(product.price_cents)}</span>
-          {product.in_stock ? (
-            <button
-              onClick={() => addItem(product)}
-              className="bg-espresso hover:bg-clay text-cream text-sm px-4 py-2 rounded-xl transition-colors"
-            >
-              Add to Cart
-            </button>
+    <div
+      ref={cardRef}
+      className={`deck-card group cursor-pointer ${deckVisible ? 'deck-visible' : 'deck-hidden'}`}
+      style={{
+        '--deck-x': offset.x,
+        '--deck-y': offset.y,
+        '--deck-r': offset.r,
+        transitionDelay: deckVisible ? `${delay}ms` : '0ms',
+      }}
+    >
+      {/* Image */}
+      <Link to={`/product/${product.slug}`} tabIndex={-1} className="block">
+        <div
+          className={`aspect-[3/4] overflow-hidden bg-charcoal relative ${
+            !isAvailable ? 'opacity-50 grayscale group-hover:grayscale-0 group-hover:opacity-80' : ''
+          }`}
+        >
+          {product.image_url ? (
+            <img
+              src={resolveImageUrl(product.image_url)}
+              alt={product.name}
+              className="tilt-image w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+            />
           ) : (
-            <span className="text-sm text-clay/50 font-body">Sold Out</span>
+            <div className="w-full h-full bg-iron flex items-center justify-center">
+              <svg className="w-8 h-8 text-mist" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1}
+                  d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+              </svg>
+            </div>
+          )}
+
+          {/* Sold out badge */}
+          {!isAvailable && (
+            <div className="absolute top-3 left-3 bg-obsidian/90 text-pearl px-3 py-1 text-[10px] uppercase tracking-widest font-body">
+              Sold Out
+            </div>
+          )}
+
+          {/* Quick add — slides up on hover */}
+          {isAvailable && (
+            <div className="absolute bottom-0 left-0 right-0 translate-y-full group-hover:translate-y-0 transition-transform duration-400 ease-out bg-gradient-to-t from-obsidian/85 via-obsidian/40 to-transparent pt-8 pb-4 px-4">
+              <button
+                onClick={(e) => { e.preventDefault(); e.stopPropagation(); addItem(product) }}
+                className="w-full bg-ivory text-obsidian py-2.5 text-[11px] uppercase tracking-widest font-body hover:bg-accent transition-colors duration-200"
+              >
+                Quick Add
+              </button>
+            </div>
           )}
         </div>
+      </Link>
+
+      {/* Card info */}
+      <div className="mt-3 space-y-0.5">
+        <Link
+          to={`/product/${product.slug}`}
+          className="block group/info"
+        >
+          <h4 className="font-display text-ivory text-base font-light leading-tight group-hover/info:text-accent transition-colors duration-200">
+            {product.name}
+          </h4>
+          <p className="text-mist text-[11px] uppercase tracking-widest font-body capitalize mt-0.5">
+            {product.category}
+          </p>
+        </Link>
+        <p className="text-pearl font-body text-sm pt-1">{formatPrice(product.price_cents)}</p>
       </div>
-    </article>
+    </div>
   )
 }

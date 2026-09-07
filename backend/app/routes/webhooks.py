@@ -43,7 +43,15 @@ def _handle_succeeded(pi_id: str, intent):
 
     for item in order.items:
         if item.product_id:
-            product = Product.query.get(item.product_id)
+            # SELECT ... FOR UPDATE serialises concurrent webhooks for the same
+            # product row, preventing two simultaneous events from overselling.
+            # with_for_update() is a no-op on SQLite; it takes effect on Postgres.
+            product = (
+                Product.query
+                .filter_by(id=item.product_id)
+                .with_for_update()
+                .first()
+            )
             if product:
                 product.stock = max(0, product.stock - item.quantity)
 

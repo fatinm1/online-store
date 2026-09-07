@@ -48,4 +48,10 @@ def admin_me():
     admin = AdminUser.query.get(session["admin_id"])
     if not admin:
         return jsonify({"error": "Unauthorized"}), 401
-    return jsonify(admin.to_dict())
+    # Re-issue a CSRF token here too, not just on /login. The token only
+    # lives in the SPA's in-memory JS state, so a page reload or a fresh
+    # tab that resumes an existing session cookie would otherwise have no
+    # token at all and every mutation would fail with "CSRF token missing
+    # or invalid" until the admin explicitly logged out and back in.
+    csrf_token = generate_csrf_token()
+    return jsonify({"admin": admin.to_dict(), "csrf_token": csrf_token})

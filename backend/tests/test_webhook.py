@@ -2,6 +2,7 @@ import json
 import time
 import hmac
 import hashlib
+import pytest
 from unittest.mock import patch, MagicMock
 from app.models import Order, OrderItem, Product
 from app.extensions import db
@@ -132,3 +133,64 @@ def test_webhook_payment_failed(client, app):
     with app.app_context():
         order = Order.query.get(order_id)
         assert order.status == "failed"
+
+
+def test_webhook_for_update_decrement_is_correct(client, app):
+    """Stock decrement via the select-for-update query path gives the right result."""
+    order_id, product_id = _create_order_and_product(app)  # stock=5, qty=2
+
+    event = _make_event("pi_wh_test", "payment_intent.succeeded")
+    with patch("stripe.Webhook.construct_event", return_value=event):
+        resp = client.post(
+            "/api/webhooks/stripe",
+            data=json.dumps(event).encode(),
+            content_type="application/json",
+            headers={"Stripe-Signature": "t=1,v1=valid"},
+        )
+    assert resp.status_code == 200
+    with app.app_context():
+        product = Product.query.get(product_id)
+        assert product.stock == 3  # 5 - 2
+
+
+def test_webhook_for_update_stock_floor_is_zero(client, app):
+    """Stock never goes below zero even if quantity exceeds available stock."""
+    with app.app_context():
+        p = Product(slug="low-stock", name="Low Stock", category="abaya", price_cents=5000, stock=1)
+        db.session.add(p)
+        db.session.flush()
+        order = Order(payment_intent_id="pi_floor_test", amount_cents=5000, status="pending")
+        db.session.add(order)
+        db.session.flush()
+        item = OrderItem(
+            order_id=order.id, product_id=p.id,
+            product_name="Low Stock", unit_price_cents=5000, quantity=5,
+        )
+        db.session.add(item)
+        db.session.commit()
+        order_id, product_id = order.id, p.id
+
+    event = _make_event("pi_floor_test", "payment_intent.succeeded")
+    with patch("stripe.Webhook.construct_event", return_value=event):
+        resp = client.post(
+            "/api/webhooks/stripe",
+            data=json.dumps(event).encode(),
+            content_type="application/json",
+            headers={"Stripe-Signature": "t=1,v1=valid"},
+        )
+    assert resp.status_code == 200
+    with app.app_context():
+        product = Product.query.get(product_id)
+        assert product.stock == 0  # max(0, 1 - 5) == 0
+
+
+@pytest.mark.skip(
+    reason=(
+        "True concurrency test requires Postgres; SELECT ... FOR UPDATE "
+        "is a no-op on SQLite so row-level locking cannot be exercised here. "
+        "Run against a real Postgres instance with two threads to verify."
+    )
+)
+def test_concurrent_webhooks_no_oversell(client, app):
+    """Two simultaneous payment_intent.succeeded events must not double-decrement stock."""
+    pass

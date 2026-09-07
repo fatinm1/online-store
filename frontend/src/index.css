@@ -2,51 +2,130 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ─── Base ───────────────────────────────────────────────────────────────── */
 @layer base {
   html {
-    font-family: 'Questrial', system-ui, sans-serif;
-    background-color: #f7f2e9;
-    color: #2b1d12;
+    font-family: 'DM Sans', system-ui, sans-serif;
+    background-color: #080808;
+    color: #ede8de;
     scroll-behavior: smooth;
+    overflow-x: hidden;
   }
 
   h1, h2, h3, h4, h5 {
-    font-family: 'Fraunces', Georgia, serif;
+    font-family: 'Cormorant Garamond', Georgia, serif;
   }
 
-  /* Grain overlay */
-  body::before {
-    content: '';
-    position: fixed;
-    inset: 0;
-    pointer-events: none;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
-    background-size: 200px;
-    z-index: 9999;
-    opacity: 0.3;
-  }
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: #080808; }
+  ::-webkit-scrollbar-thumb { background: #b8965a; border-radius: 10px; }
 
-  /* Thin scrollbar */
-  ::-webkit-scrollbar {
-    width: 4px;
-  }
-  ::-webkit-scrollbar-track {
-    background: #f7f2e9;
-  }
-  ::-webkit-scrollbar-thumb {
-    background: #9a6a48;
-    border-radius: 2px;
+  /* Smooth color/border transitions only — not transform or opacity,
+     which are controlled per-component */
+  *, *::before, *::after {
+    transition-property: background-color, border-color, color, box-shadow;
+    transition-duration: 0.25s;
+    transition-timing-function: ease;
   }
 }
 
-@layer utilities {
-  .reveal {
-    opacity: 0;
-    transform: translateY(20px);
-    transition: opacity 0.6s ease, transform 0.6s ease;
-  }
-  .reveal.visible {
-    opacity: 1;
-    transform: translateY(0);
-  }
+/* ─── Custom cursor ──────────────────────────────────────────────────────── */
+.custom-cursor {
+  width: 18px;
+  height: 18px;
+  background: #b8965a;
+  border-radius: 50%;
+  position: fixed;
+  pointer-events: none;
+  z-index: 10000;
+  mix-blend-mode: difference;
+  transition: transform 0.15s ease-out;
+  transform: translate(-50%, -50%);
+  display: none;
+}
+@media (pointer: fine) {
+  .custom-cursor { display: block; }
+}
+
+/* ─── Grain overlay ──────────────────────────────────────────────────────── */
+.grain-overlay {
+  position: fixed;
+  top: 0; left: 0; width: 100%; height: 100%;
+  background: url('https://grainy-gradients.vercel.app/noise.svg');
+  opacity: 0.04;
+  pointer-events: none;
+  z-index: 9999;
+  mix-blend-mode: screen;
+}
+
+/* ─── Scroll reveal ──────────────────────────────────────────────────────── */
+.reveal-hidden {
+  opacity: 0;
+  transform: translateY(32px);
+  transition: opacity 0.9s cubic-bezier(0.22, 1, 0.36, 1),
+              transform 0.9s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.reveal-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.reveal-from-left.reveal-hidden  { transform: translateX(-80px); opacity: 0; }
+.reveal-from-right.reveal-hidden { transform: translateX(80px);  opacity: 0; }
+.reveal-from-bottom.reveal-hidden { transform: translateY(80px); opacity: 0; }
+.reveal-from-left.reveal-visible,
+.reveal-from-right.reveal-visible,
+.reveal-from-bottom.reveal-visible {
+  transform: translate(0, 0);
+  opacity: 1;
+}
+
+/* ─── Deck spread animation ──────────────────────────────────────────────── */
+.deck-card {
+  transform-origin: center bottom;
+  will-change: transform, opacity;
+}
+.deck-card.deck-hidden {
+  opacity: 0;
+  transform: translate(var(--deck-x), var(--deck-y)) rotate(var(--deck-r)) scale(0.85);
+  transition: transform 1.4s cubic-bezier(0.16, 1, 0.3, 1),
+              opacity 1.4s ease-out;
+}
+.deck-card.deck-visible {
+  opacity: 1;
+  transform: translate(0, 0) rotate(0deg) scale(1);
+  transition: transform 1.4s cubic-bezier(0.16, 1, 0.3, 1),
+              opacity 1.4s ease-out;
+}
+.deck-card.deck-visible:hover {
+  transform: translateY(-10px) scale(1.015);
+  z-index: 20;
+  transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+              opacity 0.45s ease;
+}
+
+/* ─── Nav underline slide ────────────────────────────────────────────────── */
+.nav-link::after {
+  content: '';
+  position: absolute;
+  bottom: -3px; left: 0;
+  width: 0; height: 1px;
+  background: #b8965a;
+  transition: width 0.3s ease;
+}
+.nav-link:hover::after { width: 100%; }
+
+/* ─── Tilt image ─────────────────────────────────────────────────────────── */
+.tilt-image {
+  transition: transform 0.3s ease, filter 0.3s ease;
+}
+
+/* ─── Category card (home page circles) hover ────────────────────────────── */
+.circle-card .circle-label {
+  transform: translateY(4px);
+  transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1), color 0.3s ease;
+}
+.circle-card:hover .circle-label {
+  transform: translateY(0);
+  color: #b8965a;
 }
