@@ -42,25 +42,25 @@ export default function ImageUploader({ productId, currentUrl, onUploaded }) {
     <div>
       <div
         onClick={() => inputRef.current?.click()}
-        className="relative w-full aspect-video bg-sand rounded-xl overflow-hidden cursor-pointer hover:opacity-90 transition-opacity flex items-center justify-center"
+        className="relative w-full aspect-video bg-charcoal border border-iron overflow-hidden cursor-pointer hover:border-accent transition-colors flex items-center justify-center"
       >
         {preview ? (
           <img src={preview} alt="Product" className="w-full h-full object-cover" />
         ) : (
-          <div className="text-clay/40 text-center">
-            <svg className="w-10 h-10 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <div className="text-mist text-center">
+            <svg className="w-8 h-8 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 4v16m8-8H4" />
             </svg>
-            <p className="font-body text-sm">Upload image</p>
+            <p className="font-body text-xs uppercase tracking-widest">Upload image</p>
           </div>
         )}
         {uploading && (
-          <div className="absolute inset-0 bg-espresso/40 flex items-center justify-center">
-            <p className="text-cream font-body text-sm">Uploading...</p>
+          <div className="absolute inset-0 bg-obsidian/60 flex items-center justify-center">
+            <p className="text-ivory font-body text-xs uppercase tracking-widest">Uploading...</p>
           </div>
         )}
       </div>
-      {error && <p className="font-body text-xs text-red-600 mt-1">{error}</p>}
+      {error && <p className="font-body text-xs text-red-400 mt-2">{error}</p>}
       <input ref={inputRef} type="file" accept="image/png,image/jpeg,image/webp" onChange={handleChange} className="hidden" />
     </div>
   )
