@@ -9,7 +9,10 @@ export function AuthProvider({ children }) {
 
   useEffect(() => {
     adminApi.me()
-      .then(setAdmin)
+      .then((data) => {
+        setCsrfToken(data.csrf_token)
+        setAdmin(data.admin)
+      })
       .catch(() => setAdmin(null))
       .finally(() => setLoading(false))
   }, [])
