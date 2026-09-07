@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom'
 import { useCart } from '../context/CartContext'
 import { useTilt } from '../hooks/useTilt'
+import { resolveImageUrl } from '../utils/media'
 
 function formatPrice(cents) {
   return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(cents / 100)
@@ -43,7 +44,7 @@ export default function ProductCard({ product, deckVisible, deckIndex }) {
         >
           {product.image_url ? (
             <img
-              src={product.image_url}
+              src={resolveImageUrl(product.image_url)}
               alt={product.name}
               className="tilt-image w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
             />

@@ -1,4 +1,5 @@
 import { useCart } from '../context/CartContext'
+import { resolveImageUrl } from '../utils/media'
 
 function formatPrice(cents) {
   return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(cents / 100)
@@ -45,7 +46,7 @@ export default function CartDrawer({ open, onClose, onCheckout }) {
             <div key={product.id} className="flex gap-4 bg-charcoal border border-iron/60 p-3">
               <div className="w-16 h-20 bg-iron overflow-hidden flex-shrink-0">
                 {product.image_url ? (
-                  <img src={product.image_url} alt={product.name} className="w-full h-full object-cover" />
+                  <img src={resolveImageUrl(product.image_url)} alt={product.name} className="w-full h-full object-cover" />
                 ) : (
                   <div className="w-full h-full bg-iron" />
                 )}

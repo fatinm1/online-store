@@ -1,11 +1,12 @@
 import { useState, useRef } from 'react'
 import { adminApi } from '../api/admin'
+import { resolveImageUrl } from '../utils/media'
 
 const ALLOWED = ['image/png', 'image/jpeg', 'image/webp']
 const MAX_BYTES = 5 * 1024 * 1024
 
 export default function ImageUploader({ productId, currentUrl, onUploaded }) {
-  const [preview, setPreview] = useState(currentUrl || null)
+  const [preview, setPreview] = useState(resolveImageUrl(currentUrl) || null)
   const [uploading, setUploading] = useState(false)
   const [error, setError] = useState(null)
   const inputRef = useRef(null)
@@ -27,7 +28,7 @@ export default function ImageUploader({ productId, currentUrl, onUploaded }) {
       onUploaded(data.image_url)
     } catch (e) {
       setError(e.message)
-      setPreview(currentUrl || null)
+      setPreview(resolveImageUrl(currentUrl) || null)
     } finally {
       setUploading(false)
     }
