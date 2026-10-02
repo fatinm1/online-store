@@ -46,6 +46,25 @@ def test_checkout_price_tampering_ignored(client, sample_products, app):
     assert mock_create.call_args[1]["amount"] == 10000  # real price used
 
 
+def test_checkout_blank_email_accepted(client, sample_products, app):
+    """The frontend's optional email field sends "" (never omits the key)
+    when left blank. fields.Email()'s allow_none=True only exempts None,
+    not "", so this used to 400 with "Not a valid email address" for every
+    customer who didn't type an email -- caught via a live production test,
+    not the original suite, since no existing test sent an explicit ""."""
+    with patch("stripe.PaymentIntent.create") as mock_create:
+        mock_create.return_value = _make_intent(10000)
+        resp = client.post(
+            "/api/checkout/create-payment-intent",
+            json={
+                "items": [{"product_id": _get_id(app, "test-abaya"), "quantity": 1}],
+                "email": "",
+            },
+        )
+    assert resp.status_code == 200
+    assert resp.get_json()["amount_cents"] == 10000
+
+
 def test_checkout_unknown_product(client, app):
     resp = client.post(
         "/api/checkout/create-payment-intent",

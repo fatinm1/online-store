@@ -1,4 +1,4 @@
-from marshmallow import Schema, fields, validate, EXCLUDE
+from marshmallow import Schema, fields, validate, pre_load, EXCLUDE
 
 VALID_CATEGORIES = ["abaya", "thobe", "accessory"]
 VALID_STATUSES = ["pending", "paid", "failed", "fulfilled"]
@@ -30,6 +30,18 @@ class CreatePaymentIntentSchema(Schema):
             validate.Regexp(r"^[A-Za-z0-9_-]+$"),
         ],
     )
+
+    @pre_load
+    def blank_email_to_none(self, data, **kwargs):
+        # The email field is optional in the UI and the frontend always
+        # sends "" (never omits the key) when the customer leaves it blank.
+        # fields.Email() with allow_none=True only exempts None from format
+        # validation, not an empty string, so every blank-email checkout was
+        # rejected with 400 "Not a valid email address" -- normalize "" to
+        # None here so it reaches allow_none instead of the format check.
+        if isinstance(data, dict) and data.get("email") == "":
+            data = {**data, "email": None}
+        return data
 
 
 class AdminLoginSchema(Schema):
