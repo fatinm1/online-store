@@ -1,3 +1,4 @@
+import uuid
 import stripe
 from flask import Blueprint, jsonify, request, current_app
 from marshmallow import ValidationError
@@ -43,16 +44,35 @@ def create_payment_intent():
     currency = current_app.config.get("CURRENCY", "usd")
     stripe.api_key = current_app.config["STRIPE_SECRET_KEY"]
 
+    # A client-supplied key lets a retried request (double click, flaky
+    # network) reuse the same PaymentIntent instead of creating a second
+    # one; falling back to a fresh uuid still protects against duplicate
+    # Stripe-side retries even if the client sends none.
+    idempotency_key = data.get("idempotency_key") or uuid.uuid4().hex
+
     try:
         intent = stripe.PaymentIntent.create(
             amount=total_cents,
             currency=currency,
             receipt_email=email or None,
             metadata={"source": "numme"},
+            idempotency_key=idempotency_key,
         )
     except stripe.error.StripeError as exc:
         current_app.logger.error("Stripe error: %s", exc)
         return jsonify({"error": "Payment service unavailable"}), 502
+
+    # Stripe returned the same PaymentIntent for a retried request -- the
+    # order was already recorded on the first attempt, so return it as-is
+    # instead of trying (and failing on the unique constraint) to insert
+    # a duplicate.
+    existing_order = Order.query.filter_by(payment_intent_id=intent.id).first()
+    if existing_order is not None:
+        return jsonify({
+            "client_secret": intent.client_secret,
+            "amount_cents": existing_order.amount_cents,
+            "currency": existing_order.currency,
+        })
 
     order = Order(
         payment_intent_id=intent.id,

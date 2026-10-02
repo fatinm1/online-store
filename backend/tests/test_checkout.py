@@ -103,6 +103,53 @@ def test_checkout_pending_order_recorded(client, sample_products, app):
         assert len(order.items) == 1
 
 
+def test_checkout_idempotency_key_forwarded_to_stripe(client, sample_products, app):
+    """A client-supplied idempotency key is passed through to Stripe."""
+    with patch("stripe.PaymentIntent.create") as mock_create:
+        mock_create.return_value = _make_intent(10000)
+        client.post(
+            "/api/checkout/create-payment-intent",
+            json={
+                "items": [{"product_id": _get_id(app, "test-abaya"), "quantity": 1}],
+                "idempotency_key": "retry-key-abc123",
+            },
+        )
+    assert mock_create.call_args[1]["idempotency_key"] == "retry-key-abc123"
+
+
+def test_checkout_missing_idempotency_key_still_generates_one(client, sample_products, app):
+    """No key from the client -- server still sends one so Stripe-side retries are safe."""
+    with patch("stripe.PaymentIntent.create") as mock_create:
+        mock_create.return_value = _make_intent(10000)
+        client.post(
+            "/api/checkout/create-payment-intent",
+            json={"items": [{"product_id": _get_id(app, "test-abaya"), "quantity": 1}]},
+        )
+    assert mock_create.call_args[1]["idempotency_key"]
+
+
+def test_checkout_retry_with_same_intent_does_not_duplicate_order(client, sample_products, app):
+    """If Stripe returns the same PaymentIntent for a retried request (same
+    idempotency key), the second response reuses the existing order instead
+    of inserting a duplicate row for the same payment_intent_id."""
+    with patch("stripe.PaymentIntent.create") as mock_create:
+        mock_create.return_value = _make_intent(10000)
+        payload = {
+            "items": [{"product_id": _get_id(app, "test-abaya"), "quantity": 1}],
+            "idempotency_key": "same-attempt-key",
+        }
+        first = client.post("/api/checkout/create-payment-intent", json=payload)
+        second = client.post("/api/checkout/create-payment-intent", json=payload)
+
+    assert first.status_code == 200
+    assert second.status_code == 200
+    assert first.get_json()["client_secret"] == second.get_json()["client_secret"]
+
+    with app.app_context():
+        orders = Order.query.filter_by(payment_intent_id="pi_test123").all()
+        assert len(orders) == 1
+
+
 def _get_id(app, slug):
     from app.models import Product
     with app.app_context():

@@ -22,6 +22,14 @@ class CreatePaymentIntentSchema(Schema):
         validate=validate.Length(min=1, max=50),
     )
     email = fields.Email(load_default="", allow_none=True)
+    idempotency_key = fields.Str(
+        load_default=None,
+        allow_none=True,
+        validate=[
+            validate.Length(max=128),
+            validate.Regexp(r"^[A-Za-z0-9_-]+$"),
+        ],
+    )
 
 
 class AdminLoginSchema(Schema):
