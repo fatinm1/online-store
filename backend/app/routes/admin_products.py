@@ -1,5 +1,5 @@
-import os
 import uuid
+from io import BytesIO
 from flask import Blueprint, jsonify, request, current_app
 from marshmallow import ValidationError
 from PIL import Image, UnidentifiedImageError
@@ -8,6 +8,7 @@ from ..extensions import db, limiter
 from ..models import Product, OrderItem, VALID_CATEGORIES
 from ..schemas import ProductCreateSchema, ProductUpdateSchema
 from ..security import admin_required, csrf_required
+from ..storage import save_product_image
 
 bp = Blueprint("admin_products", __name__)
 
@@ -137,20 +138,19 @@ def upload_image(product_id):
         output_format = "JPEG" if fmt == "JPEG" else "PNG" if fmt == "PNG" else "WEBP"
         extension = output_format.lower()
         filename = f"{uuid.uuid4().hex}.{extension}"
-
-        upload_folder = current_app.config.get("UPLOAD_FOLDER", "uploads")
-        os.makedirs(upload_folder, exist_ok=True)
-        save_path = os.path.join(upload_folder, filename)
+        content_type = f"image/{extension}"
 
         # Convert to RGB for JPEG (no alpha)
         if output_format == "JPEG" and img.mode in ("RGBA", "P"):
             img = img.convert("RGB")
-        img.save(save_path, format=output_format)
+
+        buffer = BytesIO()
+        img.save(buffer, format=output_format)
+        image_url = save_product_image(current_app, filename, buffer.getvalue(), content_type)
     except Exception as exc:
         current_app.logger.error("Image processing error: %s", exc)
         return jsonify({"error": "Could not process image"}), 400
 
-    image_url = f"/uploads/{filename}"
     product.image_url = image_url
     db.session.commit()
 

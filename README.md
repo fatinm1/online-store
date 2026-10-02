@@ -34,7 +34,7 @@ npm run dev
 ## Stripe CLI webhook forwarding (local dev)
 
 ```bash
-stripe listen --forward-to localhost:5000/api/webhooks/stripe
+stripe listen --forward-to localhost:8000/api/webhooks/stripe
 ```
 
 Copy the `whsec_...` secret printed by the CLI into `backend/.env` as `STRIPE_WEBHOOK_SECRET`.
@@ -72,7 +72,15 @@ checkout — `localStorage` data is display-only and never trusted for pricing.
 
 - Set `DATABASE_URL` to a Postgres connection string.
 - Set `FORCE_HTTPS=true` and provide all required secrets via environment variables.
-- Store uploads in S3 or Cloudinary (see SECURITY.md).
+- Set `REDIS_URL` so rate limits are shared across gunicorn workers instead of
+  reset per-worker (see SECURITY.md). Railway's Redis plugin provides this.
+- Set `S3_BUCKET`, `S3_ENDPOINT_URL`, `S3_ACCESS_KEY_ID`, `S3_SECRET_ACCESS_KEY`,
+  and `S3_PUBLIC_URL_BASE` so uploaded product images go to object storage
+  instead of local disk, which Railway wipes on every deploy. Supabase
+  Storage is S3-compatible (Project Settings > Storage > S3 Connection), so
+  these can point at the same Supabase project already used for `DATABASE_URL`.
+- The app fails fast at startup (`RuntimeError`) if any of the above are
+  missing in production -- see `ProductionConfig.validate()` in `app/config.py`.
 - Run `flask db upgrade` or re-run `seed.py` to initialize schema.
 - `psycopg2-binary` is included in `requirements.txt` for Postgres support. It can
   be omitted from a dev environment that uses only SQLite.

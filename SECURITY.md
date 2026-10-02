@@ -15,8 +15,16 @@ in a signed, httpOnly cookie. The approach:
   against the session-stored token using `hmac.compare_digest` to prevent
   timing attacks.
 - Login is rate-limited to 5 requests per minute per IP to blunt brute force.
+  Flask-Limiter's storage backend is Redis in production (`REDIS_URL`),
+  shared across all gunicorn workers; falling back to its default in-memory
+  storage there would give each worker its own private counter, so the real
+  limit would be `workers * 5` and would reset on every deploy.
+  `ProductionConfig.validate()` requires `REDIS_URL` be set.
 - Error messages are always "Invalid credentials" regardless of whether the
-  email exists, preventing user enumeration.
+  email exists, preventing user enumeration. A login with an unknown email
+  still runs a full argon2 verify against a precomputed dummy hash
+  (`security.DUMMY_PASSWORD_HASH`), so the response time doesn't leak
+  whether the email exists either.
 - Passwords are hashed with Argon2id (argon2-cffi). Plain passwords are never
   stored, logged, or returned.
 
@@ -40,6 +48,7 @@ canonical price from the database and computes the total itself.
 - Orders transition to `paid` **only** via a Stripe webhook whose
   `Stripe-Signature` header is verified with `stripe.Webhook.construct_event`.
   A forged or missing signature returns 400 and leaves the order untouched.
+  The endpoint is rate-limited to 60 requests per minute per IP.
 - The webhook handler is idempotent: if an event is re-delivered, it checks
   the current order status and skips re-processing if already paid.
 - Stock decrements use `SELECT ... FOR UPDATE` (via SQLAlchemy's
@@ -67,11 +76,18 @@ recomputes the total from the database.
    metadata.
 4. A random UUID filename is generated; the client-provided filename is never
    used.
-5. Uploads are stored outside the code directory and served with a correct,
-   non-executable content type via Flask's `send_from_directory`.
-6. In production, object storage (S3 or Cloudinary) is preferred over local
-   disk to prevent path traversal and to ensure uploads are not co-located
-   with executable code.
+5. In development, uploads are stored outside the code directory and served
+   with a correct, non-executable content type via Flask's
+   `send_from_directory`.
+6. In production, uploads go to S3-compatible object storage instead of
+   local disk (`app/storage.py`, selected automatically when `S3_BUCKET` is
+   configured) -- both to prevent path traversal / co-location with
+   executable code, and because Railway's filesystem is ephemeral: a local
+   file would be silently deleted on every deploy or restart. Supabase
+   Storage (S3-compatible) is used by default since the project already has
+   a Supabase account for Postgres; any S3-compatible provider works.
+   `ProductionConfig.validate()` fails fast at startup if the S3 env vars
+   are missing, rather than silently falling back to disk in production.
 
 ## Security Headers (Flask-Talisman)
 

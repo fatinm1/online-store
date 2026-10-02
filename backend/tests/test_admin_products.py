@@ -102,6 +102,8 @@ def test_image_upload_valid_png(admin_client, app, sample_products):
     assert "image_url" in resp.get_json()
     # Stored filename is randomized (not "test")
     assert "test" not in resp.get_json()["image_url"]
+    # No S3_BUCKET configured in tests -- falls back to local disk.
+    assert resp.get_json()["image_url"].startswith("/uploads/")
 
 
 def test_image_upload_rejects_non_image(admin_client, app, sample_products):

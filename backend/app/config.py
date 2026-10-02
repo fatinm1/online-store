@@ -28,6 +28,21 @@ class Config:
     CART_MAX_ITEMS = 50
     QUANTITY_MAX = 99
 
+    # Object storage for product images. Railway's filesystem is ephemeral,
+    # so local disk (the dev default, used when S3_BUCKET is unset) loses
+    # every admin-uploaded image on the next deploy or restart. Any
+    # S3-compatible provider works here -- Supabase Storage exposes an
+    # S3-compatible endpoint, so no new vendor/account is needed beyond the
+    # Supabase project already used for Postgres.
+    S3_BUCKET = os.environ.get("S3_BUCKET", "")
+    S3_ENDPOINT_URL = os.environ.get("S3_ENDPOINT_URL", "")
+    S3_REGION = os.environ.get("S3_REGION", "us-east-1")
+    S3_ACCESS_KEY_ID = os.environ.get("S3_ACCESS_KEY_ID", "")
+    S3_SECRET_ACCESS_KEY = os.environ.get("S3_SECRET_ACCESS_KEY", "")
+    # Public base URL objects are served from, e.g. for Supabase Storage:
+    # https://<project-ref>.supabase.co/storage/v1/object/public/<bucket>
+    S3_PUBLIC_URL_BASE = os.environ.get("S3_PUBLIC_URL_BASE", "")
+
     # In-memory storage only tracks hits seen by the one worker process that
     # handled them, so with gunicorn running multiple workers a "5 per
     # minute" limit is really 5-per-worker -- an attacker can get workers*5
@@ -61,6 +76,13 @@ class ProductionConfig(Config):
             "FRONTEND_ORIGIN",
             "ADMIN_EMAIL",
             "ADMIN_PASSWORD",
+            # Without these, uploaded images silently fall back to local
+            # disk and vanish on the next deploy -- fail fast instead.
+            "S3_BUCKET",
+            "S3_ENDPOINT_URL",
+            "S3_ACCESS_KEY_ID",
+            "S3_SECRET_ACCESS_KEY",
+            "S3_PUBLIC_URL_BASE",
         ]
         missing = [k for k in required if not os.environ.get(k)]
         if not (os.environ.get("REDIS_URL") or os.environ.get("RATELIMIT_STORAGE_URI")):
