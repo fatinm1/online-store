@@ -50,7 +50,7 @@ export default function Dashboard() {
                 className={`flex justify-between items-center px-5 py-3.5 ${i !== stats.low_stock.length - 1 ? 'border-b border-iron' : ''}`}
               >
                 <span className="font-body text-sm text-ivory">{p.name}</span>
-                <span className="font-body text-sm text-accent">{p.stock} remaining</span>
+                <span className="font-body text-sm text-maroon">{p.stock} remaining</span>
               </div>
             ))}
           </div>

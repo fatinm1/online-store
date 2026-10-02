@@ -84,7 +84,7 @@ export default function ProductCard({ product, deckVisible, deckIndex }) {
           to={`/product/${product.slug}`}
           className="block group/info"
         >
-          <h4 className="font-display text-ivory text-base font-light leading-tight group-hover/info:text-accent transition-colors duration-200">
+          <h4 className="font-display text-ivory text-base font-light leading-tight group-hover/info:text-maroon transition-colors duration-200">
             {product.name}
           </h4>
           <p className="text-mist text-[11px] uppercase tracking-widest font-body capitalize mt-0.5">

@@ -110,7 +110,7 @@ export default function ProductForm({ product, onSaved, onCancel }) {
       )}
 
       {justCreated && (
-        <p className="font-body text-xs text-accent">
+        <p className="font-body text-xs text-maroon">
           Product created. Add a photo above, then click Done.
         </p>
       )}
@@ -127,7 +127,7 @@ export default function ProductForm({ product, onSaved, onCancel }) {
         <button
           type="button"
           onClick={() => (justCreated ? onSaved({ id: savedId, ...form, image_url: imageUrl }) : onCancel())}
-          className="border border-iron text-pearl px-6 py-3 font-body text-xs uppercase tracking-widest hover:border-accent hover:text-accent transition-colors"
+          className="border border-iron text-pearl px-6 py-3 font-body text-xs uppercase tracking-widest hover:border-accent hover:text-maroon transition-colors"
         >
           {justCreated ? 'Done' : 'Cancel'}
         </button>

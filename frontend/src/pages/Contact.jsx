@@ -25,7 +25,7 @@ export default function Contact() {
         ref={headRef}
         className={`mb-20 reveal-hidden ${headVisible ? 'reveal-visible' : ''}`}
       >
-        <p className="font-script text-accent text-5xl leading-none mb-1">Get in Touch</p>
+        <p className="font-script text-maroon text-5xl leading-none mb-1">Get in Touch</p>
         <h1 className="font-display text-6xl lg:text-8xl text-ivory font-light leading-none">
           Contact
         </h1>
@@ -51,7 +51,7 @@ export default function Contact() {
                 {href ? (
                   <a
                     href={href}
-                    className="text-ivory font-body text-sm hover:text-accent transition-colors"
+                    className="text-ivory font-body text-sm hover:text-maroon transition-colors"
                   >
                     {value}
                   </a>
@@ -71,7 +71,7 @@ export default function Contact() {
           {submitted ? (
             <div className="border border-iron/60 p-10 text-center space-y-4">
               <div className="w-12 h-12 border border-accent/40 rounded-full flex items-center justify-center mx-auto">
-                <svg className="w-5 h-5 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
+                <svg className="w-5 h-5 text-maroon" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
                 </svg>
               </div>

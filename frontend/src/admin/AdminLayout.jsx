@@ -26,7 +26,7 @@ export default function AdminLayout() {
               end={end}
               className={({ isActive }) =>
                 `block px-4 py-2 border-l-2 font-body text-sm tracking-wide transition-colors ${
-                  isActive ? 'border-accent text-accent bg-iron/40' : 'border-transparent text-mist hover:text-ivory hover:border-iron'
+                  isActive ? 'border-accent text-maroon bg-iron/40' : 'border-transparent text-mist hover:text-ivory hover:border-iron'
                 }`
               }
             >

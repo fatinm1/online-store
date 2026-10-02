@@ -79,7 +79,7 @@ export default function SizingChart() {
       <h2>Need Help?</h2>
       <p>
         Unsure of your size? Contact us at{' '}
-        <a href="mailto:hello@numme.com" className="text-accent hover:underline">
+        <a href="mailto:hello@numme.com" className="text-maroon hover:underline">
           hello@numme.com
         </a>{' '}
         and our team will be happy to advise based on your measurements.

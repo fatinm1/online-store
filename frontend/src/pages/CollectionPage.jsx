@@ -12,7 +12,7 @@ export default function CollectionPage({ category, title, description }) {
           ref={bannerRef}
           className={`max-w-[1440px] mx-auto px-6 lg:px-12 py-16 lg:py-24 reveal-hidden ${bannerVisible ? 'reveal-visible' : ''}`}
         >
-          <p className="font-script text-accent text-4xl leading-none mb-1">
+          <p className="font-script text-maroon text-4xl leading-none mb-1">
             {category ? 'The Edit' : 'Everything'}
           </p>
           <h1 className="font-display text-6xl lg:text-8xl text-ivory font-light leading-none mb-6">

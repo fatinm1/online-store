@@ -20,10 +20,12 @@ export default {
         pearl: '#b8b0a4',
         mist: '#6e6660',
         accent: '#b8965a',
+        maroon: '#6e1423',
       },
       fontFamily: {
         display: ['"Cormorant Garamond"', 'Georgia', 'serif'],
-        script: ['"Great Vibes"', 'cursive'],
+        // Was Great Vibes (cursive script); now a straight, non-cursive face.
+        script: ['"DM Sans"', 'system-ui', 'sans-serif'],
         body: ['"DM Sans"', 'system-ui', 'sans-serif'],
       },
       letterSpacing: {

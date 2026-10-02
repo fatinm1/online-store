@@ -30,7 +30,7 @@ export default function Login() {
     <div className="min-h-screen bg-obsidian flex items-center justify-center p-4 relative">
       <div className="grain-overlay" aria-hidden="true" />
       <div className="bg-onyx border border-iron w-full max-w-sm p-8 relative">
-        <p className="font-script text-accent text-3xl leading-none mb-1">Welcome back</p>
+        <p className="font-script text-maroon text-3xl leading-none mb-1">Welcome back</p>
         <h1 className="font-display text-3xl text-ivory font-light mb-2">NUMME Admin</h1>
         <p className="font-body text-sm text-mist mb-8">Sign in to manage your store.</p>
         <form onSubmit={handleSubmit} className="space-y-5">

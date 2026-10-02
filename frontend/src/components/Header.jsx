@@ -63,7 +63,7 @@ export default function Header({ onCartOpen }) {
           {/* Center: wordmark */}
           <Link
             to="/"
-            className="text-[22px] font-display font-light tracking-[0.45em] text-ivory hover:text-accent transition-colors duration-300"
+            className="text-[22px] font-display font-light tracking-[0.45em] text-ivory hover:text-maroon transition-colors duration-300"
           >
             NUMME
           </Link>

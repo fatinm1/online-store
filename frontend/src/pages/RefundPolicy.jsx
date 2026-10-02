@@ -18,7 +18,7 @@ export default function RefundPolicy() {
       <h2>How to Return</h2>
       <p>
         To initiate a return, please contact us at{' '}
-        <a href="mailto:returns@numme.com" className="text-accent hover:underline">
+        <a href="mailto:returns@numme.com" className="text-maroon hover:underline">
           returns@numme.com
         </a>{' '}
         with your order number and reason for return. We will respond within 2 business

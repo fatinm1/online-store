@@ -92,7 +92,7 @@ export default function ProductsTable() {
                   <td className="px-5 py-3.5 font-body text-sm text-ivory">{formatPrice(p.price_cents)}</td>
                   <td className="px-5 py-3.5 font-body text-sm text-ivory">{p.stock}</td>
                   <td className="px-5 py-3.5">
-                    <span className={`font-body text-[11px] uppercase tracking-widest px-2.5 py-1 ${p.active ? 'bg-accent/15 text-accent' : 'bg-iron text-mist'}`}>
+                    <span className={`font-body text-[11px] uppercase tracking-widest px-2.5 py-1 ${p.active ? 'bg-accent/15 text-maroon' : 'bg-iron text-mist'}`}>
                       {p.active ? 'Active' : 'Hidden'}
                     </span>
                   </td>

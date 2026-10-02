@@ -54,20 +54,20 @@ function Hero() {
       {/* Content */}
       <div
         ref={ref}
-        className={`relative z-10 w-full max-w-[1440px] mx-auto px-6 lg:px-12 pb-16 lg:pb-24 reveal-hidden ${visible ? 'reveal-visible' : ''}`}
+        className={`relative z-10 w-full max-w-[1440px] mx-auto px-6 lg:px-12 pb-16 lg:pb-24 text-center reveal-hidden ${visible ? 'reveal-visible' : ''}`}
       >
-        <p className="font-script text-accent text-4xl lg:text-5xl mb-1 leading-none">
+        <p className="font-script text-maroon text-4xl lg:text-5xl mb-1 leading-none">
           New Collection
         </p>
         <h1 className="font-display font-light text-ivory leading-[0.88] tracking-tight text-[clamp(3.5rem,8vw,7rem)] mb-7">
           Dressed in<br />
-          <em className="text-accent not-italic">silence.</em>
+          <em className="text-maroon not-italic">silence.</em>
         </h1>
-        <p className="text-pearl font-body max-w-sm text-sm lg:text-base leading-relaxed mb-10">
+        <p className="text-pearl font-body max-w-sm mx-auto text-sm lg:text-base leading-relaxed mb-10">
           Modest luxury for those who believe faith and elegance belong together.
           Abayas, thobes, and accessories crafted with intention.
         </p>
-        <div className="flex flex-wrap gap-4">
+        <div className="flex flex-wrap gap-4 justify-center">
           <Link
             to="/products"
             className="px-10 py-3.5 bg-ivory text-obsidian font-body text-xs uppercase tracking-widest hover:bg-accent transition-colors duration-300"
@@ -76,7 +76,7 @@ function Hero() {
           </Link>
           <Link
             to="/abayas"
-            className="px-10 py-3.5 border border-ivory/30 text-ivory font-body text-xs uppercase tracking-widest hover:border-accent hover:text-accent transition-colors duration-300"
+            className="px-10 py-3.5 border border-ivory/30 text-ivory font-body text-xs uppercase tracking-widest hover:border-accent hover:text-maroon transition-colors duration-300"
           >
             New Arrivals
           </Link>
@@ -140,7 +140,7 @@ function OurCollections() {
         className={`flex flex-col sm:flex-row sm:items-end sm:justify-between mb-12 gap-4 reveal-hidden ${headVisible ? 'reveal-visible' : ''}`}
       >
         <div>
-          <p className="font-script text-accent text-4xl leading-none mb-1">Our</p>
+          <p className="font-script text-maroon text-4xl leading-none mb-1">Our</p>
           <h2 className="font-display text-5xl lg:text-6xl text-ivory font-light leading-none">Collections</h2>
         </div>
         <Link
@@ -184,7 +184,7 @@ function BrandStory() {
           className={`space-y-8 reveal-from-left reveal-hidden ${textVisible ? 'reveal-visible' : ''}`}
         >
           <div>
-            <p className="font-script text-accent text-4xl leading-none mb-2">Our Story</p>
+            <p className="font-script text-maroon text-4xl leading-none mb-2">Our Story</p>
             <h2 className="font-display text-5xl lg:text-6xl text-ivory font-light leading-tight">
               Modest dressing,<br />first class.
             </h2>
@@ -242,7 +242,7 @@ function NewArrivals() {
         className={`flex flex-col sm:flex-row sm:items-end sm:justify-between mb-12 gap-4 reveal-hidden ${headVisible ? 'reveal-visible' : ''}`}
       >
         <div>
-          <p className="font-script text-accent text-4xl leading-none mb-1">Featured</p>
+          <p className="font-script text-maroon text-4xl leading-none mb-1">Featured</p>
           <h2 className="font-display text-5xl lg:text-6xl text-ivory font-light leading-none">New Arrivals</h2>
         </div>
         <Link

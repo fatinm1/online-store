@@ -24,7 +24,7 @@ export default function Footer() {
           <div className="md:col-span-2 space-y-6">
             <Link
               to="/"
-              className="inline-block text-[22px] font-display font-light tracking-[0.45em] text-ivory hover:text-accent transition-colors duration-300"
+              className="inline-block text-[22px] font-display font-light tracking-[0.45em] text-ivory hover:text-maroon transition-colors duration-300"
             >
               NUMME
             </Link>
@@ -42,7 +42,7 @@ export default function Footer() {
                   key={label}
                   href="#"
                   aria-label={label}
-                  className="text-mist hover:text-accent transition-colors"
+                  className="text-mist hover:text-maroon transition-colors"
                 >
                   <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
                     <path d={d} />

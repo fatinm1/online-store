@@ -48,7 +48,7 @@ export default function ShippingPolicy() {
       <h2>Lost or Delayed Packages</h2>
       <p>
         If your order has not arrived within the estimated timeframe, please contact us at{' '}
-        <a href="mailto:hello@numme.com" className="text-accent hover:underline">
+        <a href="mailto:hello@numme.com" className="text-maroon hover:underline">
           hello@numme.com
         </a>{' '}
         and we will investigate with the courier on your behalf.

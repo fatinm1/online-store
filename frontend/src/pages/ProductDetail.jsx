@@ -65,7 +65,7 @@ export default function ProductDetail() {
         </p>
         <Link
           to="/products"
-          className="inline-block border border-iron text-pearl px-8 py-3 font-body text-xs uppercase tracking-widest hover:border-accent hover:text-accent transition-colors"
+          className="inline-block border border-iron text-pearl px-8 py-3 font-body text-xs uppercase tracking-widest hover:border-accent hover:text-maroon transition-colors"
         >
           Browse All Products
         </Link>
@@ -122,7 +122,7 @@ export default function ProductDetail() {
             <h1 className="font-display text-4xl lg:text-6xl text-ivory font-light leading-tight">
               {product.name}
             </h1>
-            <p className="font-body text-2xl text-accent">{formatPrice(product.price_cents)}</p>
+            <p className="font-body text-2xl text-maroon">{formatPrice(product.price_cents)}</p>
           </div>
 
           <div className="w-12 h-[1px] bg-iron" />

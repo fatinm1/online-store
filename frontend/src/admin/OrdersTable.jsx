@@ -8,9 +8,9 @@ function formatPrice(cents) {
 const STATUSES = ['pending', 'paid', 'failed', 'fulfilled']
 const STATUS_COLORS = {
   pending: 'bg-iron text-mist',
-  paid: 'bg-accent/15 text-accent',
+  paid: 'bg-accent/15 text-maroon',
   failed: 'bg-red-500/15 text-red-400',
-  fulfilled: 'bg-accent/15 text-accent',
+  fulfilled: 'bg-accent/15 text-maroon',
 }
 
 const selectClass = 'bg-charcoal border border-iron text-ivory font-body text-sm px-4 py-2.5 focus:outline-none focus:border-accent'
@@ -150,14 +150,14 @@ export default function OrdersTable() {
           <button
             disabled={page <= 1}
             onClick={() => setPage(p => p - 1)}
-            className="px-4 py-1.5 border border-iron text-pearl font-body text-xs uppercase tracking-widest disabled:opacity-30 hover:border-accent hover:text-accent transition-colors"
+            className="px-4 py-1.5 border border-iron text-pearl font-body text-xs uppercase tracking-widest disabled:opacity-30 hover:border-accent hover:text-maroon transition-colors"
           >
             Prev
           </button>
           <button
             disabled={page * 20 >= total}
             onClick={() => setPage(p => p + 1)}
-            className="px-4 py-1.5 border border-iron text-pearl font-body text-xs uppercase tracking-widest disabled:opacity-30 hover:border-accent hover:text-accent transition-colors"
+            className="px-4 py-1.5 border border-iron text-pearl font-body text-xs uppercase tracking-widest disabled:opacity-30 hover:border-accent hover:text-maroon transition-colors"
           >
             Next
           </button>
