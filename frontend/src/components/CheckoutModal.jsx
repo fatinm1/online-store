@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import { loadStripe } from '@stripe/stripe-js'
 import { Elements, PaymentElement, useStripe, useElements } from '@stripe/react-stripe-js'
 import { api } from '../api/client'
@@ -70,13 +70,20 @@ export default function CheckoutModal({ open, onClose }) {
   const [loadingIntent, setLoadingIntent] = useState(false)
   const [intentError, setIntentError] = useState(null)
   const [success, setSuccess] = useState(false)
+  // Stable for the life of one checkout attempt so a retry (network hiccup,
+  // double click) reuses the same PaymentIntent instead of creating a new
+  // one; reset in handleClose so a fresh attempt gets a fresh key.
+  const idempotencyKeyRef = useRef(null)
 
   const startCheckout = async () => {
     setLoadingIntent(true)
     setIntentError(null)
+    if (!idempotencyKeyRef.current) {
+      idempotencyKeyRef.current = crypto.randomUUID()
+    }
     try {
       const payload = items.map((i) => ({ product_id: i.product.id, quantity: i.quantity }))
-      const data = await api.createPaymentIntent(payload, email)
+      const data = await api.createPaymentIntent(payload, email, idempotencyKeyRef.current)
       setClientSecret(data.client_secret)
       setAmountCents(data.amount_cents)
     } catch (e) {
@@ -96,6 +103,7 @@ export default function CheckoutModal({ open, onClose }) {
     setSuccess(false)
     setEmail('')
     setIntentError(null)
+    idempotencyKeyRef.current = null
     onClose()
   }
 
@@ -117,7 +125,7 @@ export default function CheckoutModal({ open, onClose }) {
         {success ? (
           <div className="text-center py-10">
             <div className="w-14 h-14 border border-accent/40 rounded-full flex items-center justify-center mx-auto mb-6">
-              <svg className="w-7 h-7 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
+              <svg className="w-7 h-7 text-maroon" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
               </svg>
             </div>

@@ -16,9 +16,9 @@ export const api = {
   getProducts: (category) =>
     request(`/api/products${category ? `?category=${category}` : ''}`),
   getProduct: (slug) => request(`/api/products/${slug}`),
-  createPaymentIntent: (items, email) =>
+  createPaymentIntent: (items, email, idempotencyKey) =>
     request('/api/checkout/create-payment-intent', {
       method: 'POST',
-      body: JSON.stringify({ items, email }),
+      body: JSON.stringify({ items, email, idempotency_key: idempotencyKey }),
     }),
 }
