@@ -3,7 +3,7 @@ from marshmallow import ValidationError
 from ..extensions import db, limiter
 from ..models import AdminUser
 from ..schemas import AdminLoginSchema
-from ..security import verify_password, hash_password, generate_csrf_token, admin_required
+from ..security import verify_password, hash_password, generate_csrf_token, admin_required, DUMMY_PASSWORD_HASH
 
 bp = Blueprint("admin_auth", __name__)
 _schema = AdminLoginSchema()
@@ -19,9 +19,9 @@ def admin_login():
 
     admin = AdminUser.query.filter_by(email=data["email"]).first()
 
-    # Always run verify to prevent timing attacks even if admin not found
-    dummy_hash = "$argon2id$v=19$m=65536,t=3,p=4$dummy$dummy"
-    pw_hash = admin.password_hash if admin else dummy_hash
+    # Always run a real verify, even if admin not found, so the response
+    # time doesn't reveal whether the email exists.
+    pw_hash = admin.password_hash if admin else DUMMY_PASSWORD_HASH
     ok = verify_password(data["password"], pw_hash)
 
     if not admin or not ok:

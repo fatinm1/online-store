@@ -10,6 +10,14 @@ _ph = PasswordHasher()
 CSRF_HEADER = "X-CSRF-Token"
 CSRF_SESSION_KEY = "csrf_token"
 
+# A real argon2 hash, computed once at import. Used as a stand-in password
+# hash when a login's email doesn't match any admin, so verify_password()
+# always does genuine KDF work on both branches of admin_login() and the
+# response time can't be used to tell whether the email exists. A malformed
+# hash string would fail argon2's own parsing almost instantly instead,
+# which is faster than a real mismatch and leaks exactly that signal.
+DUMMY_PASSWORD_HASH = _ph.hash(secrets.token_hex(32))
+
 
 def hash_password(plain: str) -> str:
     return _ph.hash(plain)

@@ -28,6 +28,19 @@ class Config:
     CART_MAX_ITEMS = 50
     QUANTITY_MAX = 99
 
+    # In-memory storage only tracks hits seen by the one worker process that
+    # handled them, so with gunicorn running multiple workers a "5 per
+    # minute" limit is really 5-per-worker -- an attacker can get workers*5
+    # attempts, and every limit resets on each worker restart/deploy. Point
+    # this at Redis (shared across workers and processes) in production via
+    # REDIS_URL or RATELIMIT_STORAGE_URI; falls back to in-memory for local
+    # dev and tests where there's only ever one process.
+    RATELIMIT_STORAGE_URI = (
+        os.environ.get("RATELIMIT_STORAGE_URI")
+        or os.environ.get("REDIS_URL")
+        or "memory://"
+    )
+
     SESSION_COOKIE_HTTPONLY = True
     SESSION_COOKIE_SAMESITE = "Lax"
     SESSION_COOKIE_SECURE = False
@@ -50,6 +63,8 @@ class ProductionConfig(Config):
             "ADMIN_PASSWORD",
         ]
         missing = [k for k in required if not os.environ.get(k)]
+        if not (os.environ.get("REDIS_URL") or os.environ.get("RATELIMIT_STORAGE_URI")):
+            missing.append("REDIS_URL (or RATELIMIT_STORAGE_URI)")
         if missing:
             raise RuntimeError(f"Missing required env vars: {', '.join(missing)}")
 

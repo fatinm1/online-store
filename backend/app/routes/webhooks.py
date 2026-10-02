@@ -1,12 +1,13 @@
 import stripe
 from flask import Blueprint, jsonify, request, current_app
-from ..extensions import db
+from ..extensions import db, limiter
 from ..models import Order, OrderItem, Product
 
 bp = Blueprint("webhooks", __name__)
 
 
 @bp.route("/webhooks/stripe", methods=["POST"])
+@limiter.limit("60 per minute")
 def stripe_webhook():
     payload = request.get_data()
     sig = request.headers.get("Stripe-Signature", "")
